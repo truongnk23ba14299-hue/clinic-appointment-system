@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedBooking — Đặt lịch khám bệnh trực tuyến</title>
+<meta name="description" content="Đặt lịch khám bệnh trực tuyến nhanh chóng, chọn bác sĩ theo chuyên khoa và quản lý lịch hẹn dễ dàng tại Phòng khám Đa khoa MedBooking.">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="index.html" class="brand">
+      <span class="brand-icon">M</span>
+      MedBooking
+      <span class="tag">Phòng khám đa khoa</span>
+    </a>
+    <nav class="main-nav">
+      <a href="index.html" class="active">Trang chủ</a>
+      <a href="departments.html">Phòng ban</a>
+      <a href="doctors.html">Bác sĩ</a>
+      <a href="booking.html">Đặt lịch</a>
+      <a href="appointments.html">Lịch của tôi</a>
+    </nav>
+    <a href="booking.html" class="btn btn-primary">Đặt lịch ngay</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO SECTION WITH AUTO SLIDESHOW -->
+  <section class="hero-photo">
+    <!-- Slider Background Images -->
+    <div class="hero-bg-slider">
+      <!-- Ảnh 1: Phòng khám hiện đại & Bác sĩ tư vấn -->
+      <div class="hero-bg-slide active" style="background-image: url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1800&q=80');"></div>
+      <!-- Ảnh 2: Khám chữa bệnh tận tâm -->
+      <div class="hero-bg-slide" style="background-image: url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1800&q=80');"></div>
+      <!-- Ảnh 3: Trang thiết bị y tế hiện đại -->
+      <div class="hero-bg-slide" style="background-image: url('https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1800&q=80');"></div>
+      <!-- Ảnh 4: Đội ngũ y bác sĩ thân thiện -->
+      <div class="hero-bg-slide" style="background-image: url('https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1800&q=80');"></div>
+      <!-- Overlay che mờ -->
+      <div class="hero-bg-overlay"></div>
+    </div>
+
+    <!-- Dots Indicators -->
+    <div class="hero-indicators" id="heroIndicators">
+      <button class="hero-indicator-dot active" data-index="0" aria-label="Slide 1"></button>
+      <button class="hero-indicator-dot" data-index="1" aria-label="Slide 2"></button>
+      <button class="hero-indicator-dot" data-index="2" aria-label="Slide 3"></button>
+      <button class="hero-indicator-dot" data-index="3" aria-label="Slide 4"></button>
+    </div>
+
+    <div class="wrap">
+      <div class="hero-photo-content">
+        <div class="hero-badge">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          MỞ CỬA 24/7 · TIẾP NHẬN CẤP CỨU
+        </div>
+        <h1>Chào mừng đến với <span class="highlight">Phòng khám MedBooking</span></h1>
+        <p>Đặt lịch khám trực tuyến, xem hồ sơ bác sĩ chuyên khoa và quản lý lịch hẹn của bạn chỉ trong vài thao tác đơn giản.</p>
+        <div class="hero-actions">
+          <a href="booking.html" class="btn btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Đặt lịch hẹn ngay
+          </a>
+          <a href="#lien-he" class="btn btn-outline">
+            Tìm hiểu thêm
+          </a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="num">50+</div>
+            <div class="lbl">Bác sĩ chuyên khoa</div>
+          </div>
+          <div class="stat-item">
+            <div class="num">24/7</div>
+            <div class="lbl">Cấp cứu & Hỗ trợ</div>
+          </div>
+          <div class="stat-item">
+            <div class="num">99%</div>
+            <div class="lbl">Hài lòng dịch vụ</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHUYÊN KHOA -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>Chuyên khoa nổi bật</h2>
+          <p>Chọn chuyên khoa để tìm kiếm bác sĩ phù hợp với nhu cầu khám bệnh</p>
+        </div>
+        <a href="departments.html" class="btn btn-outline btn-sm">Xem tất cả phòng ban →</a>
+      </div>
+      <div class="pill-row" id="specialtyPills"></div>
+    </div>
+  </section>
+
+  <!-- BÁC SĨ NỔI BẬT -->
+  <section class="section section-alt">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>Đội ngũ bác sĩ tiêu biểu</h2>
+          <p>Các chuyên gia giàu kinh nghiệm sẵn sàng thăm khám và tư vấn</p>
+        </div>
+        <a href="doctors.html" class="btn btn-outline btn-sm">Xem tất cả bác sĩ →</a>
+      </div>
+      <div class="doctor-grid" id="doctorPreview"></div>
+    </div>
+  </section>
+
+  <!-- VÌ SAO CHỌN CHÚNG TÔI -->
+  <section class="section" id="lien-he">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>Vì sao chọn MedBooking</h2>
+          <p>Dịch vụ chăm sóc sức khỏe hiện đại và tận tâm</p>
+        </div>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M9 16l2 2 4-4"/></svg>
+          </div>
+          <h3>Đặt lịch không cần chờ</h3>
+          <p>Xem khung giờ trống theo thời gian thực, xác nhận giữ chỗ ngay lập tức mà không cần chờ điện thoại.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
+          </div>
+          <h3>Bác sĩ đúng chuyên khoa</h3>
+          <p>Dễ dàng tra cứu thông tin trình độ, kinh nghiệm và chuyên môn của từng bác sĩ trước khi quyết định.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <h3>Quản lý lịch hẹn dễ dàng</h3>
+          <p>Theo dõi lịch khám cá nhân, chủ động theo dõi trạng thái hoặc hủy hẹn nhanh chóng khi cần.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="brand-icon">M</span> MedBooking
+      </div>
+      <nav class="footer-nav">
+        <a href="index.html">Trang chủ</a>
+        <a href="departments.html">Phòng ban</a>
+        <a href="doctors.html">Bác sĩ</a>
+        <a href="booking.html">Đặt lịch</a>
+        <a href="appointments.html">Lịch của tôi</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 MedBooking. Tất cả quyền được bảo lưu.</span>
+      <span>Hotline Cấp cứu: <strong>0336 578 262</strong></span>
+    </div>
+  </div>
+</footer>
+
+<!-- Ô liên hệ khẩn cấp nổi góc dưới -->
+<div class="emergency-chip" id="emergencyChip">
+  <div class="txt">
+    <strong>Cấp cứu & Hỗ trợ 24/7</strong>
+    Xe cấp cứu & Chăm sóc tận nơi
+  </div>
+  <a href="tel:0336578262" class="call">Gọi ngay</a>
+  <button class="close" id="closeChip" aria-label="Đóng ô cấp cứu">✕</button>
+</div>
+
+<script src="js/data.js"></script>
+<script>
+  // Hero Slideshow Automatic Switch (4.5s)
+  const slides = document.querySelectorAll(".hero-bg-slide");
+  const dots = document.querySelectorAll(".hero-indicator-dot");
+  let currentSlide = 0;
+  let slideTimer;
+
+  function goToSlide(index) {
+    slides[currentSlide].classList.remove("active");
+    dots[currentSlide].classList.remove("active");
+    currentSlide = index;
+    slides[currentSlide].classList.add("active");
+    dots[currentSlide].classList.add("active");
+  }
+
+  function nextSlide() {
+    goToSlide((currentSlide + 1) % slides.length);
+  }
+
+  function startSlideTimer() {
+    slideTimer = setInterval(nextSlide, 4500);
+  }
+
+  dots.forEach(dot => {
+    dot.addEventListener("click", () => {
+      clearInterval(slideTimer);
+      const index = parseInt(dot.getAttribute("data-index"), 10);
+      goToSlide(index);
+      startSlideTimer();
+    });
+  });
+
+  startSlideTimer();
+
+  // Render pill chuyên khoa
+  const pillRow = document.getElementById("specialtyPills");
+  SPECIALTIES.forEach(s => {
+    const a = document.createElement("a");
+    a.href = `doctors.html?specialty=${encodeURIComponent(s)}`;
+    a.className = "pill";
+    a.textContent = s;
+    pillRow.appendChild(a);
+  });
+
+  // Render 3 bác sĩ nổi bật
+  const preview = document.getElementById("doctorPreview");
+  DOCTORS.slice(0, 3).forEach(d => {
+    const card = document.createElement("div");
+    card.className = "stub";
+    card.innerHTML = `
+      <div class="stub-top">
+        <a href="doctor.html?id=${d.id}" class="stub-avatar" style="--avatar-bg: ${d.color}" title="Xem thông tin ${d.name}">${d.initials}</a>
+        <div class="stub-info">
+          <h3><a href="doctor.html?id=${d.id}" class="doctor-link">${d.name}</a></h3>
+          <span class="badge">${d.specialty}</span>
+        </div>
+      </div>
+      <div class="stub-meta">
+        <span class="stub-rating">★ ${d.rating}</span>
+        <span>(${d.reviews} đánh giá)</span>
+        <span>·</span>
+        <span>${d.years} năm KN</span>
+      </div>
+      <div class="stub-bottom">
+        <span class="note">${d.note}</span>
+        <div class="stub-actions">
+          <a class="btn btn-outline btn-sm" style="flex:1;" href="doctor.html?id=${d.id}">Xem thông tin</a>
+          <a class="btn btn-primary btn-sm" style="flex:1;" href="booking.html?doctor=${d.id}">Đặt lịch</a>
+        </div>
+      </div>
+    `;
+    preview.appendChild(card);
+  });
+
+  // Đóng ô liên hệ khẩn cấp
+  document.getElementById("closeChip").addEventListener("click", () => {
+    document.getElementById("emergencyChip").style.display = "none";
+  });
+</script>
+</body>
+</html>

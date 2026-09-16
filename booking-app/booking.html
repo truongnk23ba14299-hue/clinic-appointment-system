@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đặt lịch khám — MedBooking</title>
+<meta name="description" content="Đặt lịch hẹn khám bệnh trực tuyến tại MedBooking. Chọn bác sĩ, ngày và khung giờ khám mong muốn nhanh chóng.">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="index.html" class="brand">
+      <span class="brand-icon">M</span>
+      MedBooking
+      <span class="tag">Phòng khám đa khoa</span>
+    </a>
+    <nav class="main-nav">
+      <a href="index.html">Trang chủ</a>
+      <a href="departments.html">Phòng ban</a>
+      <a href="doctors.html">Bác sĩ</a>
+      <a href="booking.html" class="active">Đặt lịch</a>
+      <a href="appointments.html">Lịch của tôi</a>
+    </nav>
+    <a href="booking.html" class="btn btn-primary">Đặt lịch ngay</a>
+  </div>
+</header>
+
+<main>
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>Đặt lịch khám bệnh</h2>
+          <p>Điền đầy đủ thông tin bên dưới để hệ thống giữ chỗ ngay lập tức</p>
+        </div>
+      </div>
+
+      <div class="booking-container">
+        <!-- Main Booking Form Card -->
+        <form class="form-card" id="bookingForm" novalidate>
+
+          <div class="field" id="field-doctor">
+            <label for="doctor">1. Chọn bác sĩ khám *</label>
+            <select id="doctor" name="doctor">
+              <option value="">— Chọn bác sĩ —</option>
+            </select>
+            <div class="field-error">Vui lòng chọn bác sĩ khám</div>
+          </div>
+
+          <div class="field" id="field-date">
+            <label for="date">2. Chọn ngày khám *</label>
+            <input type="date" id="date" name="date">
+            <div class="field-error">Vui lòng chọn ngày khám hợp lệ (từ hôm nay trở đi)</div>
+          </div>
+
+          <div class="field" id="field-time">
+            <label>3. Chọn khung giờ khám *</label>
+            
+            <div class="time-period">
+              <div class="time-period-title">Buổi sáng (08:00 - 11:30)</div>
+              <div class="time-grid" id="timeGridMorning"></div>
+            </div>
+
+            <div class="time-period" style="margin-top: 14px;">
+              <div class="time-period-title">Buổi chiều (13:30 - 16:30)</div>
+              <div class="time-grid" id="timeGridAfternoon"></div>
+            </div>
+
+            <div class="hint">Ghi chú: Khung giờ gạch ngang mờ là đã có bệnh nhân khác đặt giữ chỗ.</div>
+            <div class="field-error">Vui lòng chọn 1 khung giờ khám còn trống</div>
+          </div>
+
+          <div class="field" id="field-name">
+            <label for="patientName">4. Họ và tên người khám *</label>
+            <input type="text" id="patientName" name="patientName" placeholder="Ví dụ: Nguyễn Văn An">
+            <div class="field-error">Vui lòng nhập họ tên đầy đủ (tối thiểu 2 ký tự)</div>
+          </div>
+
+          <div class="field" id="field-phone">
+            <label for="phone">5. Số điện thoại liên hệ *</label>
+            <input type="tel" id="phone" name="phone" placeholder="Ví dụ: 0336578262">
+            <div class="field-error">Số điện thoại không hợp lệ (cần 9 đến 11 chữ số)</div>
+          </div>
+
+          <div class="field">
+            <label for="reason">6. Triệu chứng hoặc lý do khám (không bắt buộc)</label>
+            <textarea id="reason" name="reason" placeholder="Ví dụ: Đau đầu, sốt nhẹ 2 ngày, cần tư vấn thêm..."></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width:100%;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Xác nhận đặt lịch khám
+          </button>
+
+          <div class="form-msg" id="formMsg"></div>
+        </form>
+
+        <!-- Right Sidebar Summary Card -->
+        <div class="booking-summary-card">
+          <h3>Tóm tắt lịch hẹn</h3>
+          
+          <div class="summary-item">
+            <span class="label">Bác sĩ:</span>
+            <span class="val" id="sumDoctor">Chưa chọn</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">Chuyên khoa:</span>
+            <span class="val" id="sumSpecialty">—</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">Ngày khám:</span>
+            <span class="val" id="sumDate">—</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">Khung giờ:</span>
+            <span class="val" id="sumTime">—</span>
+          </div>
+
+          <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 13px; color: var(--muted); line-height: 1.5;">
+            ✓ Xác nhận ngay lập tức<br>
+            ✓ Không mất phí đặt lịch<br>
+            ✓ Đổi hoặc hủy lịch hẹn bất cứ lúc nào
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Modal Xác nhận Thành Công -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal-card">
+    <div class="modal-icon success">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h3>Đặt lịch thành công!</h3>
+    <p id="modalSuccessBody">Lịch hẹn của bạn đã được ghi nhận trên hệ thống MedBooking.</p>
+    <div class="modal-actions">
+      <button class="btn btn-outline" id="modalBtnNew">Đặt lịch mới</button>
+      <a href="appointments.html" class="btn btn-primary">Xem lịch hẹn của tôi</a>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="brand-icon">M</span> MedBooking
+      </div>
+      <nav class="footer-nav">
+        <a href="index.html">Trang chủ</a>
+        <a href="departments.html">Phòng ban</a>
+        <a href="doctors.html">Bác sĩ</a>
+        <a href="booking.html">Đặt lịch</a>
+        <a href="appointments.html">Lịch của tôi</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 MedBooking. Tất cả quyền được bảo lưu.</span>
+      <span>Hotline Cấp cứu: <strong>0336 578 262</strong></span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script>
+  const doctorSelect = document.getElementById("doctor");
+  const dateInput = document.getElementById("date");
+  const timeGridMorning = document.getElementById("timeGridMorning");
+  const timeGridAfternoon = document.getElementById("timeGridAfternoon");
+  const form = document.getElementById("bookingForm");
+  const formMsg = document.getElementById("formMsg");
+
+  // Summary elements
+  const sumDoctor = document.getElementById("sumDoctor");
+  const sumSpecialty = document.getElementById("sumSpecialty");
+  const sumDate = document.getElementById("sumDate");
+  const sumTime = document.getElementById("sumTime");
+
+  let selectedTime = null;
+
+  // Populate doctor select
+  DOCTORS.forEach(d => {
+    const opt = document.createElement("option");
+    opt.value = d.id;
+    opt.textContent = `${d.name} — ${d.specialty}`;
+    doctorSelect.appendChild(opt);
+  });
+
+  // Pre-select doctor if coming from URL query param ?doctor=id
+  const params = new URLSearchParams(window.location.search);
+  const preselect = params.get("doctor");
+  if (preselect) {
+    doctorSelect.value = preselect;
+  }
+
+  // Set min date to today
+  const today = new Date().toISOString().split("T")[0];
+  dateInput.min = today;
+  dateInput.value = today;
+
+  function updateSummary() {
+    const doc = DOCTORS.find(d => d.id === doctorSelect.value);
+    sumDoctor.textContent = doc ? doc.name : "Chưa chọn";
+    sumSpecialty.textContent = doc ? doc.specialty : "—";
+    sumDate.textContent = dateInput.value ? formatDate(dateInput.value) : "—";
+    sumTime.textContent = selectedTime || "—";
+  }
+
+  function createSlotButton(t, taken) {
+    const btn = document.createElement("div");
+    btn.className = "time-slot" + (taken.includes(t) ? " taken" : "");
+    btn.textContent = t;
+    if (!taken.includes(t)) {
+      btn.onclick = () => {
+        document.querySelectorAll(".time-slot").forEach(el => el.classList.remove("selected"));
+        btn.classList.add("selected");
+        selectedTime = t;
+        clearFieldError("field-time");
+        updateSummary();
+      };
+    }
+    return btn;
+  }
+
+  function renderTimeGrid() {
+    timeGridMorning.innerHTML = "";
+    timeGridAfternoon.innerHTML = "";
+    selectedTime = null;
+
+    const doctorId = doctorSelect.value;
+    const date = dateInput.value;
+    const taken = doctorId && date ? getTakenSlots(doctorId, date) : [];
+
+    TIME_SLOTS_MORNING.forEach(t => {
+      timeGridMorning.appendChild(createSlotButton(t, taken));
+    });
+
+    TIME_SLOTS_AFTERNOON.forEach(t => {
+      timeGridAfternoon.appendChild(createSlotButton(t, taken));
+    });
+
+    updateSummary();
+  }
+
+  doctorSelect.addEventListener("change", renderTimeGrid);
+  dateInput.addEventListener("change", renderTimeGrid);
+  renderTimeGrid();
+
+  function showFieldError(fieldId) {
+    document.getElementById(fieldId).classList.add("invalid");
+  }
+  function clearFieldError(fieldId) {
+    document.getElementById(fieldId).classList.remove("invalid");
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    let valid = true;
+
+    ["field-doctor", "field-date", "field-time", "field-name", "field-phone"].forEach(clearFieldError);
+
+    if (!doctorSelect.value) { showFieldError("field-doctor"); valid = false; }
+    if (!dateInput.value || dateInput.value < today) { showFieldError("field-date"); valid = false; }
+    if (!selectedTime) { showFieldError("field-time"); valid = false; }
+
+    const name = document.getElementById("patientName").value.trim();
+    if (name.length < 2) { showFieldError("field-name"); valid = false; }
+
+    const phone = document.getElementById("phone").value.trim();
+    if (!/^[0-9]{9,11}$/.test(phone)) { showFieldError("field-phone"); valid = false; }
+
+    if (!valid) {
+      formMsg.textContent = "Vui lòng kiểm tra lại các thông tin được đánh dấu đỏ.";
+      formMsg.className = "form-msg show error";
+      return;
+    }
+
+    formMsg.className = "form-msg";
+
+    const doctor = DOCTORS.find(d => d.id === doctorSelect.value);
+    const appointments = getAppointments();
+    const newAppt = {
+      id: "a" + Date.now(),
+      doctorId: doctor.id,
+      doctorName: doctor.name,
+      specialty: doctor.specialty,
+      date: dateInput.value,
+      time: selectedTime,
+      patientName: name,
+      phone: phone,
+      reason: document.getElementById("reason").value.trim(),
+      status: "upcoming"
+    };
+
+    appointments.push(newAppt);
+    saveAppointments(appointments);
+
+    // Show success modal
+    document.getElementById("modalSuccessBody").innerHTML = `
+      Bạn đã đặt thành công lịch khám với <strong>${doctor.name}</strong> (${doctor.specialty})<br>
+      vào lúc <strong>${selectedTime}</strong> ngày <strong>${formatDate(dateInput.value)}</strong>.<br><br>
+      Họ tên người khám: <strong>${name}</strong> (${phone})
+    `;
+    document.getElementById("successModal").classList.add("active");
+
+    form.reset();
+    dateInput.value = today;
+    renderTimeGrid();
+  });
+
+  document.getElementById("modalBtnNew").addEventListener("click", () => {
+    document.getElementById("successModal").classList.remove("active");
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lịch khám của tôi — MedBooking</title>
+<meta name="description" content="Quản lý lịch hẹn khám bệnh cá nhân tại MedBooking. Theo dõi thời gian, bác sĩ phụ trách và trạng thái lịch hẹn.">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="index.html" class="brand">
+      <span class="brand-icon">M</span>
+      MedBooking
+      <span class="tag">Phòng khám đa khoa</span>
+    </a>
+    <nav class="main-nav">
+      <a href="index.html">Trang chủ</a>
+      <a href="departments.html">Phòng ban</a>
+      <a href="doctors.html">Bác sĩ</a>
+      <a href="booking.html">Đặt lịch</a>
+      <a href="appointments.html" class="active">Lịch của tôi</a>
+    </nav>
+    <a href="booking.html" class="btn btn-primary">Đặt lịch mới</a>
+  </div>
+</header>
+
+<main>
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>Lịch hẹn của tôi</h2>
+          <p id="apptCount">Đang tải lịch hẹn...</p>
+        </div>
+        <a href="booking.html" class="btn btn-primary btn-sm">+ Đặt lịch mới</a>
+      </div>
+
+      <!-- Filter Tabs -->
+      <div class="appt-tabs">
+        <button class="appt-tab active" data-filter="all">Tất cả lịch hẹn</button>
+        <button class="appt-tab" data-filter="upcoming">Sắp tới</button>
+        <button class="appt-tab" data-filter="cancelled">Đã hủy</button>
+      </div>
+
+      <div class="appt-list" id="apptList"></div>
+    </div>
+  </section>
+</main>
+
+<!-- Modal Xác nhận Hủy Lịch -->
+<div class="modal-overlay" id="confirmCancelModal">
+  <div class="modal-card">
+    <div class="modal-icon danger">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </div>
+    <h3>Xác nhận hủy lịch hẹn?</h3>
+    <p id="cancelModalText">Bạn có chắc chắn muốn hủy lịch hẹn khám này không? Thao tác này không thể hoàn tác.</p>
+    <div class="modal-actions">
+      <button class="btn btn-outline" id="modalCancelBack">Quay lại</button>
+      <button class="btn btn-danger" id="modalCancelConfirm">Xác nhận hủy</button>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="brand-icon">M</span> MedBooking
+      </div>
+      <nav class="footer-nav">
+        <a href="index.html">Trang chủ</a>
+        <a href="departments.html">Phòng ban</a>
+        <a href="doctors.html">Bác sĩ</a>
+        <a href="booking.html">Đặt lịch</a>
+        <a href="appointments.html">Lịch của tôi</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 MedBooking. Tất cả quyền được bảo lưu.</span>
+      <span>Hotline Cấp cứu: <strong>0336 578 262</strong></span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script>
+  const apptList = document.getElementById("apptList");
+  const apptCount = document.getElementById("apptCount");
+  const tabs = document.querySelectorAll(".appt-tab");
+
+  let activeFilter = "all";
+  let targetCancelId = null;
+
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      tabs.forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+      activeFilter = tab.getAttribute("data-filter");
+      render();
+    });
+  });
+
+  function render() {
+    const rawList = getAppointments().sort((a, b) => (b.date + b.time).localeCompare(a.date + a.time));
+    
+    let filteredList = rawList;
+    if (activeFilter === "upcoming") {
+      filteredList = rawList.filter(a => a.status !== "cancelled");
+    } else if (activeFilter === "cancelled") {
+      filteredList = rawList.filter(a => a.status === "cancelled");
+    }
+
+    apptCount.textContent = `Tổng cộng ${rawList.length} lịch hẹn (${filteredList.length} hiển thị)`;
+    apptList.innerHTML = "";
+
+    if (filteredList.length === 0) {
+      apptList.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <h3>Chưa có lịch hẹn nào</h3>
+          <p>Bạn hiện tại không có lịch hẹn khám nào trong danh mục này.</p>
+          <a href="booking.html" class="btn btn-primary">+ Đặt lịch khám ngay</a>
+        </div>`;
+      return;
+    }
+
+    filteredList.forEach(a => {
+      const card = document.createElement("div");
+      card.className = "appt-card";
+      const isCancelled = a.status === "cancelled";
+
+      card.innerHTML = `
+        <div class="appt-header">
+          <div>
+            <div class="appt-doctor-name">${a.doctorName}</div>
+            <div style="font-size:13.5px; color:var(--muted); margin-top:2px;">Khoa ${a.specialty}</div>
+          </div>
+          <span class="status-tag ${isCancelled ? "cancelled" : "upcoming"}">
+            ${isCancelled ? "Đã hủy" : "Sắp tới"}
+          </span>
+        </div>
+
+        <div class="appt-details-grid">
+          <div class="appt-detail-item">
+            <span class="lbl">Thời gian khám</span>
+            <span class="val">${formatDate(a.date)} lúc ${a.time}</span>
+          </div>
+          <div class="appt-detail-item">
+            <span class="lbl">Bệnh nhân</span>
+            <span class="val">${a.patientName || "—"}</span>
+          </div>
+          <div class="appt-detail-item">
+            <span class="lbl">Số điện thoại</span>
+            <span class="val">${a.phone || "—"}</span>
+          </div>
+        </div>
+
+        ${a.reason ? `
+          <div class="appt-reason-box">
+            <strong>Triệu chứng / Lý do:</strong> ${a.reason}
+          </div>
+        ` : ""}
+
+        ${!isCancelled ? `
+          <div class="appt-footer">
+            <button class="btn btn-danger btn-cancel" data-id="${a.id}" data-name="${a.doctorName}" data-date="${formatDate(a.date)}" data-time="${a.time}">
+              Hủy lịch hẹn
+            </button>
+          </div>
+        ` : ""}
+      `;
+      apptList.appendChild(card);
+    });
+
+    document.querySelectorAll(".btn-cancel").forEach(btn => {
+      btn.addEventListener("click", () => {
+        targetCancelId = btn.getAttribute("data-id");
+        const docName = btn.getAttribute("data-name");
+        const date = btn.getAttribute("data-date");
+        const time = btn.getAttribute("data-time");
+
+        document.getElementById("cancelModalText").innerHTML = `
+          Bạn có chắc chắn muốn hủy lịch hẹn khám với <strong>${docName}</strong> vào lúc <strong>${time}</strong> ngày <strong>${date}</strong> không?
+        `;
+        document.getElementById("confirmCancelModal").classList.add("active");
+      });
+    });
+  }
+
+  document.getElementById("modalCancelBack").addEventListener("click", () => {
+    document.getElementById("confirmCancelModal").classList.remove("active");
+    targetCancelId = null;
+  });
+
+  document.getElementById("modalCancelConfirm").addEventListener("click", () => {
+    if (targetCancelId) {
+      const list = getAppointments().map(a =>
+        a.id === targetCancelId ? { ...a, status: "cancelled" } : a
+      );
+      saveAppointments(list);
+      document.getElementById("confirmCancelModal").classList.remove("active");
+      targetCancelId = null;
+      render();
+    }
+  });
+
+  render();
+</script>
+</body>
+</html>
