@@ -471,6 +471,130 @@ function getTakenSlots(doctorId, date) {
     .map(a => a.time);
 }
 
+// ---------- Services / Packages Data ----------
+const CLINIC_SERVICES = [
+  {
+    id: "s1",
+    category: "Gói khám tổng quát",
+    name: "Gói Khám Sức Khỏe Cơ Bản",
+    price: "850.000 đ",
+    popular: false,
+    desc: "Tầm soát sức khỏe tổng quát, đánh giá chức năng gan, thận, đường huyết và các chỉ số máu cơ bản.",
+    features: [
+      "Khám lâm sàng với BS Chuyên khoa Nội",
+      "Công thức máu 24 chỉ số",
+      "Đo đường huyết lúc đói & Men gan (GOT, GPT)",
+      "Đánh giá chức năng thận (Ure, Creatinin)",
+      "Đo điện tâm đồ (ECG) & X-quang tim phổi"
+    ]
+  },
+  {
+    id: "s2",
+    category: "Gói khám tổng quát",
+    name: "Gói Khám Sức Khỏe Nâng Cao",
+    price: "1.950.000 đ",
+    popular: true,
+    desc: "Gói tầm soát toàn diện chuyên sâu, kết hợp siêu âm ổ bụng tổng quát và kiểm tra mỡ máu, tim mạch.",
+    features: [
+      "Tất cả danh mục Gói Cơ Bản",
+      "Siêu âm ổ bụng tổng quát màu 4D",
+      "Xét nghiệm mỡ máu toàn phần (Cholesterol, Triglyceride, HDL, LDL)",
+      "Tầm soát bệnh lý tuyến giáp & Siêu âm tuyến giáp",
+      "Tư vấn dinh dưỡng & Phác đồ chăm sóc riêng"
+    ]
+  },
+  {
+    id: "s3",
+    category: "Gói khám tổng quát",
+    name: "Gói Tầm Soát Sức Khỏe VIP / Doanh Nhân",
+    price: "3.500.000 đ",
+    popular: false,
+    desc: "Tầm soát rủi ro đột quỵ, tim mạch chuyên sâu, xét nghiệm Marker tầm soát ung thư sớm phổ biến.",
+    features: [
+      "Tất cả danh mục Gói Nâng Cao",
+      "Xét nghiệm Marker tầm soát ung thư sớm (CEA, AFP, CA 19-9)",
+      "Siêu âm tim màu phổ Doppler & Siêu âm động mạch cảnh",
+      "Nội soi tai mũi họng bằng ống mềm không đau",
+      "Ưu tiên khám không chờ & Nhận kết quả tận nhà"
+    ]
+  },
+  {
+    id: "s4",
+    category: "Chuyên khoa",
+    name: "Khám Chuyên Khoa Nhi & Tiêm Chủng",
+    price: "300.000 đ",
+    popular: false,
+    desc: "Khám tổng quát sự phát triển thể chất của bé, tư vấn lịch tiêm phòng chủng vi-rút đúng chuẩn y tế.",
+    features: [
+      "Đánh giá chiều cao, cân nặng, sự phát triển vận động",
+      "Kiểm tra tai mũi họng & hệ hô hấp",
+      "Tư vấn thực đơn dinh dưỡng chống rạch còi",
+      "Lập sổ theo dõi tiêm chủng định kỳ"
+    ]
+  },
+  {
+    id: "s5",
+    category: "Chuyên khoa",
+    name: "Khám & Soi Da Thẩm Mỹ Chuyên Sâu",
+    price: "450.000 đ",
+    popular: false,
+    desc: "Soi da vi phẫu, phát hiện mụn ẩn, sắc tố nám, tổn thương da và xây dựng liệu trình phục hồi.",
+    features: [
+      "Soi da cắt lớp vi tính AI phân tích độ ẩm & sắc tố",
+      "Chẩn đoán viêm da, mụn trứng cá, sẹo rỗ",
+      "Kê đơn dược mỹ phẩm chuẩn y khoa",
+      "Tặng 1 buổi chăm sóc làm sạch da chuyên sâu"
+    ]
+  },
+  {
+    id: "s6",
+    category: "Xét nghiệm",
+    name: "Xét Nghiệm Vi-rút & Tầm Soát Bệnh Lý",
+    price: "600.000 đ",
+    popular: false,
+    desc: "Xét nghiệm định lượng vi-rút Viêm gan B, C, cúm mùa, sốt xuất huyết Dengue nhận kết quả sau 2 giờ.",
+    features: [
+      "Lấy máu nhẹ nhàng không đau",
+      "Kết quả chính xác 99.9% công nghệ tự động",
+      "Trả kết quả online qua tin nhắn / file PDF",
+      "Bác sĩ tư vấn miễn phí sau khi có kết quả"
+    ]
+  }
+];
+
+// ---------- Doctor Reviews Helper ----------
+const MOCK_REVIEWS = {
+  "d1": [
+    { id: "r1", name: "Nguyễn Văn Hùng", rating: 5, date: "10/09/2026", comment: "Bác sĩ An giải thích rất kĩ lưỡng và nhẹ nhàng. Tôi bị đau dạ dày nhiều năm khám nhiều nơi không khỏi, nhờ bác sĩ kê đơn chuẩn giờ đã đỡ hẳn.", verified: true },
+    { id: "r2", name: "Trần Thị Mai", rating: 5, date: "02/09/2026", comment: "Phòng khám sạch đẹp, bác sĩ An thăm khám tận tình, không lạm dụng kháng sinh. Rất hài lòng!", verified: true },
+    { id: "r3", name: "Lê Hoàng Nam", rating: 4, date: "25/08/2026", comment: "Bác sĩ có chuyên môn cao, thời gian chờ khám hơi đông một chút nhưng chất lượng tư vấn rất xứng đáng.", verified: true }
+  ],
+  "d1c": [
+    { id: "r4", name: "Phạm Quốc Bảo", rating: 5, date: "12/09/2026", comment: "Nội soi dạ dày với bác sĩ Sơn nhẹ nhàng vô cùng, không hề có cảm giác đau hay khó chịu. Cảm ơn bác sĩ!", verified: true }
+  ],
+  "d2": [
+    { id: "r5", name: "Nguyễn Thị Ngọc", rating: 5, date: "14/09/2026", comment: "BS Bình rất dịu dàng với em bé, bé nhà mình bình thường sợ bác sĩ lắm mà gặp cô Bình lại ngoan ngoãn hợp tác.", verified: true }
+  ]
+};
+
+function getDoctorReviews(doctorId) {
+  try {
+    const stored = JSON.parse(localStorage.getItem("doc_reviews_" + doctorId));
+    if (stored && Array.isArray(stored)) return stored;
+  } catch (e) {}
+  return MOCK_REVIEWS[doctorId] || [
+    { id: "r_default1", name: "Bệnh nhân ẩn danh", rating: 5, date: "05/09/2026", comment: "Bác sĩ thăm khám rất tận tâm, lắng nghe ý kiến bệnh nhân và tư vấn giải pháp hiệu quả.", verified: true },
+    { id: "r_default2", name: "Phạm Minh Anh", rating: 5, date: "28/08/2026", comment: "Quy trình làm việc nhanh gọn, bác sĩ nhiệt tình dặn dò kỹ trước khi về.", verified: true }
+  ];
+}
+
+function saveDoctorReview(doctorId, newReview) {
+  const list = getDoctorReviews(doctorId);
+  list.unshift(newReview);
+  localStorage.setItem("doc_reviews_" + doctorId, JSON.stringify(list));
+  return list;
+}
+
 function formatDate(isoStr) {
   if (!isoStr) return "";
   const parts = isoStr.split("-");

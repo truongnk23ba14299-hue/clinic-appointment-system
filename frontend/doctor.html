@@ -24,7 +24,7 @@
       <a href="index.html">Trang chủ</a>
       <a href="departments.html">Phòng ban</a>
       <a href="doctors.html" class="active">Bác sĩ</a>
-      <a href="booking.html">Đặt lịch</a>
+      <a href="services.html">Dịch vụ & Bảng giá</a>
       <a href="appointments.html">Lịch của tôi</a>
     </nav>
     <a href="booking.html" class="btn btn-primary">Đặt lịch ngay</a>
@@ -64,6 +64,50 @@
           <h3>Chuyên môn thế mạnh</h3>
           <p id="docNote" style="font-style:normal;">—</p>
         </div>
+
+        <!-- Doctor Reviews & Rating Section -->
+        <div class="dept-section" style="margin-top:40px;">
+          <h2>Đánh giá & Nhận xét từ bệnh nhân</h2>
+          
+          <div class="review-stats-card">
+            <div class="review-avg-box">
+              <div class="review-avg-num" id="avgRatingNum">5.0</div>
+              <div class="review-avg-stars" id="avgRatingStars">★★★★★</div>
+              <div class="review-avg-count" id="avgRatingCount">Đang tải đánh giá...</div>
+            </div>
+            <div style="flex:1;">
+              <p style="font-weight:600; color:var(--ink); margin-bottom:4px;">Phản hồi thực tế của bệnh nhân đã thăm khám</p>
+              <p style="font-size:14px; color:var(--muted); margin:0;">Tất cả nhận xét đều được hệ thống MedBooking ghi nhận trực tiếp từ các ca khám đã hoàn thành.</p>
+            </div>
+          </div>
+
+          <!-- Review List Container -->
+          <div class="review-list" id="reviewList"></div>
+
+          <!-- Add Review Form -->
+          <div class="review-form-card">
+            <h3>Gửi nhận xét của bạn</h3>
+            <form id="addReviewForm">
+              <div class="form-group" style="margin-bottom:12px;">
+                <label style="font-size:14px; font-weight:600; color:var(--ink); margin-bottom:6px; display:block;">Mức độ hài lòng:</label>
+                <div class="star-rating-select" id="starSelector">
+                  <span class="star active" data-val="1">★</span>
+                  <span class="star active" data-val="2">★</span>
+                  <span class="star active" data-val="3">★</span>
+                  <span class="star active" data-val="4">★</span>
+                  <span class="star active" data-val="5">★</span>
+                </div>
+              </div>
+              <div class="form-group" style="margin-bottom:12px;">
+                <input type="text" id="reviewerName" class="form-control" placeholder="Họ và tên của bạn..." required>
+              </div>
+              <div class="form-group" style="margin-bottom:16px;">
+                <textarea id="reviewerComment" class="form-control" rows="3" placeholder="Chia sẻ cảm nhận chi tiết về trải nghiệm thăm khám với bác sĩ..." required></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm">Gửi nhận xét</button>
+            </form>
+          </div>
+        </div>
       </div>
 
       <!-- Related Doctors Section -->
@@ -91,7 +135,7 @@
         <a href="index.html">Trang chủ</a>
         <a href="departments.html">Phòng ban</a>
         <a href="doctors.html">Bác sĩ</a>
-        <a href="booking.html">Đặt lịch</a>
+        <a href="services.html">Dịch vụ & Bảng giá</a>
         <a href="appointments.html">Lịch của tôi</a>
       </nav>
     </div>
@@ -196,6 +240,84 @@
       </div>
     `;
     relatedGrid.appendChild(card);
+  }
+
+  // ---------- Doctor Reviews JS Logic ----------
+  let currentRatingInput = 5;
+  const starSelector = document.getElementById("starSelector");
+  if (starSelector) {
+    starSelector.addEventListener("click", (e) => {
+      if (e.target.classList.contains("star")) {
+        currentRatingInput = parseInt(e.target.getAttribute("data-val"));
+        const stars = starSelector.querySelectorAll(".star");
+        stars.forEach((s, idx) => {
+          if (idx < currentRatingInput) s.classList.add("active");
+          else s.classList.remove("active");
+        });
+      }
+    });
+  }
+
+  function renderReviews() {
+    const reviews = getDoctorReviews(doctor.id);
+    const reviewList = document.getElementById("reviewList");
+    const avgRatingNum = document.getElementById("avgRatingNum");
+    const avgRatingCount = document.getElementById("avgRatingCount");
+
+    if (reviews.length > 0) {
+      const sum = reviews.reduce((acc, r) => acc + r.rating, 0);
+      const avg = (sum / reviews.length).toFixed(1);
+      if (avgRatingNum) avgRatingNum.textContent = avg;
+      if (avgRatingCount) avgRatingCount.textContent = `Dựa trên ${reviews.length} nhận xét của bệnh nhân`;
+    }
+
+    if (!reviewList) return;
+    reviewList.innerHTML = "";
+    reviews.forEach(r => {
+      const item = document.createElement("div");
+      item.className = "review-item";
+      const starsStr = "★".repeat(r.rating) + "☆".repeat(5 - r.rating);
+      item.innerHTML = `
+        <div class="review-item-header">
+          <div class="review-author">
+            ${r.name}
+            ${r.verified ? '<span class="review-badge-verified">✓ Đã khám</span>' : ''}
+          </div>
+          <div class="review-item-meta">
+            <span class="review-stars">${starsStr}</span>
+            <span>${r.date}</span>
+          </div>
+        </div>
+        <div class="review-comment">${r.comment}</div>
+      `;
+      reviewList.appendChild(item);
+    });
+  }
+
+  renderReviews();
+
+  const addReviewForm = document.getElementById("addReviewForm");
+  if (addReviewForm) {
+    addReviewForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const nameInput = document.getElementById("reviewerName").value.trim();
+      const commentInput = document.getElementById("reviewerComment").value.trim();
+      if (!nameInput || !commentInput) return;
+
+      const todayStr = new Date().toLocaleDateString("vi-VN");
+      saveDoctorReview(doctor.id, {
+        id: "r_" + Date.now(),
+        name: nameInput,
+        rating: currentRatingInput,
+        date: todayStr,
+        comment: commentInput,
+        verified: true
+      });
+
+      document.getElementById("reviewerName").value = "";
+      document.getElementById("reviewerComment").value = "";
+      renderReviews();
+    });
   }
 </script>
 </body>

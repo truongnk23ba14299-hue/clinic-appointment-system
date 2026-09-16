@@ -1,0 +1,117 @@
+{
+  "specialties": [
+    "Nội khoa",
+    "Nhi khoa",
+    "Da liễu",
+    "Tim mạch",
+    "Tai Mũi Họng",
+    "Mắt"
+  ],
+  "doctors": [
+    {
+      "id": "d1",
+      "name": "BS. CKII Nguyễn Văn An",
+      "specialty": "Nội khoa",
+      "initials": "AN",
+      "years": 12,
+      "rating": 4.9,
+      "reviews": 128,
+      "note": "Khám tổng quát, bệnh mãn tính, tầm soát sức khỏe định kỳ",
+      "color": "#0D9488",
+      "bio": "BS. CKII Nguyễn Văn An là chuyên gia hàng đầu về Nội khoa với hơn 12 năm kinh nghiệm thăm khám và điều trị tại các bệnh viện tuyến trung ương.",
+      "education": [
+        "Tốt nghiệp Bác sĩ Đa khoa - Đại học Y Hà Nội",
+        "Bác sĩ Chuyên khoa II Nội tổng quát - Đại học Y Dược TP.HCM",
+        "Thành viên Hội Nội khoa Việt Nam"
+      ],
+      "experienceList": [
+        "2012 - 2017: Bác sĩ Nội khoa - Bệnh viện Đa khoa Trung ương",
+        "2017 - 2022: Phó khoa Nội tổng hợp - Bệnh viện Quốc tế",
+        "2022 - Nay: Bác sĩ Chuyên khoa II Nội khoa - Phòng khám MedBooking"
+      ],
+      "schedule": "Thứ 2 - Thứ 6 (08:00 - 16:30)"
+    },
+    {
+      "id": "d2",
+      "name": "BS. CKI Trần Thị Bình",
+      "specialty": "Nhi khoa",
+      "initials": "TB",
+      "years": 8,
+      "rating": 4.9,
+      "reviews": 164,
+      "note": "Khám nhi tổng quát, tư vấn vắc xin & tiêm chủng",
+      "color": "#EC4899",
+      "bio": "BS. CKI Trần Thị Bình rất mát tay trong việc chăm sóc và điều trị cho trẻ nhỏ với phương pháp thăm khám nhẹ nhàng.",
+      "education": [
+        "Bác sĩ Chuyên khoa I Nhi khoa - Đại học Y Dược TP.HCM",
+        "Chứng chỉ An toàn tiêm chủng & Dinh dưỡng Nhi khoa"
+      ],
+      "experienceList": [
+        "2016 - 2020: Bác sĩ Nhi khoa - Bệnh viện Nhi Đồng",
+        "2020 - Nay: Bác sĩ Nhi khoa - Phòng khám MedBooking"
+      ],
+      "schedule": "Thứ 2 - Thứ 6 (08:00 - 16:30)"
+    },
+    {
+      "id": "d3",
+      "name": "ThS.BS Lê Minh Cường",
+      "specialty": "Da liễu",
+      "initials": "MC",
+      "years": 10,
+      "rating": 4.8,
+      "reviews": 112,
+      "note": "Da liễu tổng quát, dị ứng da, thẩm mỹ da nội khoa",
+      "color": "#10B981",
+      "bio": "ThS.BS Lê Minh Cường có kinh nghiệm dày dặn trong chẩn đoán và điều trị các bệnh lý da liễu mãn tính.",
+      "education": [
+        "Thạc sĩ Da liễu - Đại học Y Hà Nội",
+        "Chứng chỉ Ứng dụng Laser trong Da liễu"
+      ],
+      "experienceList": [
+        "2014 - 2019: Bác sĩ Da liễu - Bệnh viện Da liễu Trung ương",
+        "2019 - Nay: Bác sĩ Da liễu - Phòng khám MedBooking"
+      ],
+      "schedule": "Thứ 2 - Thứ 6 (08:30 - 16:30)"
+    },
+    {
+      "id": "d4",
+      "name": "PGS.TS Phạm Thu Hà",
+      "specialty": "Tim mạch",
+      "initials": "TH",
+      "years": 15,
+      "rating": 5.0,
+      "reviews": 310,
+      "note": "Khám tim mạch, cao huyết áp & bệnh lý van tim",
+      "color": "#EF4444",
+      "bio": "PGS.TS Phạm Thu Hà là chuyên gia hàng đầu về Tim mạch học tại Việt Nam.",
+      "education": [
+        "Phó Giáo sư, Tiến sĩ Y khoa - Viện Tim mạch Việt Nam",
+        "Fellowship về Tim mạch can thiệp - Pháp"
+      ],
+      "experienceList": [
+        "2009 - 2020: Chuyên gia Tim mạch - Viện Tim mạch Quốc gia",
+        "2020 - Nay: Cố vấn Chuyên môn Tim mạch - Phòng khám MedBooking"
+      ],
+      "schedule": "Thứ 2, Thứ 4, Thứ 6 (08:00 - 12:00)"
+    }
+  ],
+  "services": [
+    {
+      "id": "s1",
+      "category": "Gói khám tổng quát",
+      "name": "Gói Khám Sức Khỏe Cơ Bản",
+      "price": "850.000 đ",
+      "popular": false,
+      "desc": "Tầm soát sức khỏe tổng quát, đánh giá chức năng gan, thận, đường huyết và các chỉ số máu cơ bản."
+    },
+    {
+      "id": "s2",
+      "category": "Gói khám tổng quát",
+      "name": "Gói Khám Sức Khỏe Nâng Cao",
+      "price": "1.950.000 đ",
+      "popular": true,
+      "desc": "Gói tầm soát toàn diện chuyên sâu, kết hợp siêu âm ổ bụng tổng quát và kiểm tra mỡ máu, tim mạch."
+    }
+  ],
+  "appointments": []
+}
