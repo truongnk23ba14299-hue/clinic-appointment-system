@@ -1,94 +1,73 @@
--- Cơ sở dữ liệu Phòng Khám Đa Khoa MedBooking
--- Database Schema (MySQL / PostgreSQL / SQLite)
+-- CLINIC APPOINTMENT BOOKING SYSTEM
+-- Database Schema for MySQL (6 Bảng MVP)
 
--- 1. Bảng Chuyên Khoa (Specialties)
+-- 1. Bảng USERS (Tài khoản người dùng trong hệ thống)
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(150) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(20) NOT NULL DEFAULT 'PATIENT', -- 'PATIENT', 'DOCTOR', 'ADMIN'
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- 2. Bảng SPECIALTIES (Chuyên khoa)
 CREATE TABLE IF NOT EXISTS specialties (
-    id VARCHAR(50) PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
     description TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    active BOOLEAN DEFAULT TRUE
 );
 
--- 2. Bảng Bác Sĩ (Doctors)
+-- 3. Bảng PATIENTS (Hồ sơ Bệnh nhân, quan hệ 1-1 với Users)
+CREATE TABLE IF NOT EXISTS patients (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL UNIQUE,
+    phone VARCHAR(20),
+    date_of_birth DATE,
+    gender VARCHAR(10),
+    address TEXT,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 4. Bảng DOCTORS (Hồ sơ Bác sĩ, quan hệ 1-1 với Users, N-1 với Specialties)
 CREATE TABLE IF NOT EXISTS doctors (
-    id VARCHAR(50) PRIMARY KEY,
-    name VARCHAR(150) NOT NULL,
-    specialty_name VARCHAR(100) NOT NULL,
-    initials VARCHAR(10) NOT NULL,
-    years_exp INT DEFAULT 0,
-    rating DECIMAL(3,2) DEFAULT 5.0,
-    reviews_count INT DEFAULT 0,
-    note VARCHAR(255),
-    color VARCHAR(20),
-    bio TEXT,
-    schedule VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (specialty_name) REFERENCES specialties(name) ON DELETE CASCADE
-);
-
--- 3. Bảng Trình Độ Học Vấn Bác Sĩ (Doctor Education)
-CREATE TABLE IF NOT EXISTS doctor_education (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    doctor_id VARCHAR(50) NOT NULL,
-    degree TEXT NOT NULL,
-    FOREIGN KEY (doctor_id) REFERENCES doctors(id) ON DELETE CASCADE
-);
-
--- 4. Bảng Kinh Nghiệm Bác Sĩ (Doctor Experience)
-CREATE TABLE IF NOT EXISTS doctor_experience (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    doctor_id VARCHAR(50) NOT NULL,
-    experience_detail TEXT NOT NULL,
-    FOREIGN KEY (doctor_id) REFERENCES doctors(id) ON DELETE CASCADE
-);
-
--- 5. Bảng Dịch Vụ & Gói Khám (Services)
-CREATE TABLE IF NOT EXISTS services (
-    id VARCHAR(50) PRIMARY KEY,
-    category VARCHAR(100) NOT NULL,
-    name VARCHAR(200) NOT NULL,
-    price VARCHAR(50) NOT NULL,
-    popular BOOLEAN DEFAULT FALSE,
+    user_id INT NOT NULL UNIQUE,
+    specialty_id INT,
+    phone VARCHAR(20),
     description TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    experience_years INT DEFAULT 0,
+    active BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (specialty_id) REFERENCES specialties(id) ON DELETE SET NULL
 );
 
--- 6. Bảng Tính Năng Gói Khám (Service Features)
-CREATE TABLE IF NOT EXISTS service_features (
+-- 5. Bảng DOCTOR_SCHEDULES (Lịch làm việc bác sĩ, quan hệ N-1 với Doctors)
+CREATE TABLE IF NOT EXISTS doctor_schedules (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    service_id VARCHAR(50) NOT NULL,
-    feature_text TEXT NOT NULL,
-    FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE
+    doctor_id INT NOT NULL,
+    date DATE NOT NULL,
+    start_time VARCHAR(10) NOT NULL,
+    end_time VARCHAR(10) NOT NULL,
+    is_available BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (doctor_id) REFERENCES doctors(id) ON DELETE CASCADE
 );
 
--- 7. Bảng Lịch Hẹn Khám (Appointments)
+-- 6. Bảng APPOINTMENTS (Lịch hẹn khám)
 CREATE TABLE IF NOT EXISTS appointments (
-    id VARCHAR(50) PRIMARY KEY,
-    patient_name VARCHAR(150) NOT NULL,
-    patient_phone VARCHAR(20) NOT NULL,
-    patient_email VARCHAR(100),
-    patient_dob DATE,
-    patient_gender VARCHAR(20),
-    doctor_id VARCHAR(50) NOT NULL,
-    doctor_name VARCHAR(150) NOT NULL,
-    specialty VARCHAR(100) NOT NULL,
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    patient_id INT NOT NULL,
+    doctor_id INT NOT NULL,
+    schedule_id INT NOT NULL,
     appointment_date DATE NOT NULL,
-    appointment_time VARCHAR(20) NOT NULL,
+    start_time VARCHAR(10) NOT NULL,
     reason TEXT,
-    status VARCHAR(50) DEFAULT 'confirmed', -- confirmed, completed, cancelled
+    status VARCHAR(20) DEFAULT 'PENDING', -- 'PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED'
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (doctor_id) REFERENCES doctors(id) ON DELETE CASCADE
-);
-
--- 8. Bảng Đánh Giá Bác Sĩ (Doctor Reviews)
-CREATE TABLE IF NOT EXISTS reviews (
-    id VARCHAR(50) PRIMARY KEY,
-    doctor_id VARCHAR(50) NOT NULL,
-    reviewer_name VARCHAR(150) NOT NULL,
-    rating INT CHECK (rating >= 1 AND rating <= 5),
-    review_date VARCHAR(20),
-    comment TEXT,
-    verified BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (doctor_id) REFERENCES doctors(id) ON DELETE CASCADE
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE,
+    FOREIGN KEY (doctor_id) REFERENCES doctors(id) ON DELETE CASCADE,
+    FOREIGN KEY (schedule_id) REFERENCES doctor_schedules(id) ON DELETE CASCADE
 );

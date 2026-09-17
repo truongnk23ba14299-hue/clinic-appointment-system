@@ -1,0 +1,248 @@
+/* ==========================================================================
+   HOME PAGE SPECIFIC STYLES
+   ========================================================================== */
+
+/* ---------- Hero Section (Auto background slideshow) ---------- */
+.hero-photo {
+  position: relative;
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+  color: #ffffff;
+  padding: 60px 0;
+  overflow: hidden;
+}
+
+.hero-bg-slider {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-bg-slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transform: scale(1.05);
+  transition: opacity 1.4s ease-in-out, transform 6s ease-out;
+}
+
+.hero-bg-slide.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.hero-bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, rgba(15, 23, 42, 0.88) 0%, rgba(15, 23, 42, 0.68) 50%, rgba(15, 23, 42, 0.4) 100%);
+  z-index: 1;
+}
+
+.hero-photo-content {
+  position: relative;
+  z-index: 2;
+  max-width: 640px;
+}
+
+/* Dots indicator for slideshow */
+.hero-indicators {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  gap: 8px;
+}
+
+.hero-indicator-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.hero-indicator-dot.active {
+  background: #2DD4BF;
+  width: 24px;
+  border-radius: var(--radius-full);
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(13, 148, 136, 0.25);
+  border: 1px solid rgba(45, 212, 191, 0.4);
+  backdrop-filter: blur(8px);
+  color: #5EEAD4;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.hero-photo h1 {
+  font-size: 48px;
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+}
+
+.hero-photo h1 .highlight {
+  color: #2DD4BF;
+  display: block;
+}
+
+.hero-photo p {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 32px;
+  line-height: 1.6;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.stat-item .num {
+  font-size: 28px;
+  font-weight: 800;
+  color: #2DD4BF;
+}
+
+.stat-item .lbl {
+  font-size: 13.5px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* ---------- Emergency Floating Chip ---------- */
+.emergency-chip {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--danger-dark);
+  color: #ffffff;
+  padding: 16px 20px;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10px 30px rgba(220, 38, 38, 0.35);
+  max-width: 360px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: pulse-border 2s infinite;
+}
+
+@keyframes pulse-border {
+  0% { box-shadow: 0 10px 30px rgba(220, 38, 38, 0.35); }
+  50% { box-shadow: 0 10px 40px rgba(220, 38, 38, 0.6); }
+  100% { box-shadow: 0 10px 30px rgba(220, 38, 38, 0.35); }
+}
+
+.emergency-chip .txt {
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.emergency-chip .txt strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.emergency-chip a.call {
+  background: #ffffff;
+  color: var(--danger-dark);
+  font-weight: 700;
+  font-size: 13.5px;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast);
+}
+
+.emergency-chip a.call:hover {
+  transform: scale(1.04);
+}
+
+.emergency-chip .close {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  padding: 4px;
+}
+.emergency-chip .close:hover {
+  color: #ffffff;
+}
+
+/* ---------- Feature Section ("Vì sao chọn chúng tôi") ---------- */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.feature-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px 28px;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary-light);
+}
+
+.feature-card .icon-box {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-md);
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.feature-card h3 {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+.feature-card p {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.6;
+}
