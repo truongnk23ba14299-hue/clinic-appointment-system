@@ -22,15 +22,21 @@ INSERT INTO users (id, name, email, password_hash, role, created_at, updated_at)
 (2, 'BS. CKII Nguyễn Văn An', 'doctor.an@clinic.com', 'scrypt:32768:8:1$nN5r2X4Y8mK1lPo9$b186b1f28b7e28325a95610ec3f3e1b04593ceeeacb45be21c7d24268e6f1f4ba407338568eaec60d00f6c243eb2dca79116e0339caec1a8a2bc4a54c86cb321', 'DOCTOR', NOW(), NOW()),
 (3, 'ThS.BS Đặng Thị Mai', 'doctor.mai@clinic.com', 'scrypt:32768:8:1$nN5r2X4Y8mK1lPo9$b186b1f28b7e28325a95610ec3f3e1b04593ceeeacb45be21c7d24268e6f1f4ba407338568eaec60d00f6c243eb2dca79116e0339caec1a8a2bc4a54c86cb321', 'DOCTOR', NOW(), NOW()),
 (4, 'ThS.BS Lê Minh Cường', 'doctor.cuong@clinic.com', 'scrypt:32768:8:1$nN5r2X4Y8mK1lPo9$b186b1f28b7e28325a95610ec3f3e1b04593ceeeacb45be21c7d24268e6f1f4ba407338568eaec60d00f6c243eb2dca79116e0339caec1a8a2bc4a54c86cb321', 'DOCTOR', NOW(), NOW()),
-(5, 'Nguyễn Văn Hùng', 'patient.hung@gmail.com', 'scrypt:32768:8:1$pT9w4V6B2sQ8zMn3$e79e604f4a3fb3ce51872dfca7a1c7c9ecdaae4508ef8396c429c9fe7fa17bcf217983652dbd47cf57424ad4ba9e5264b184ef3d21396a5f573d82a17cb27993', 'PATIENT', NOW(), NOW()),
-(6, 'Trần Thị Mai', 'patient.lan@gmail.com', 'scrypt:32768:8:1$pT9w4V6B2sQ8zMn3$e79e604f4a3fb3ce51872dfca7a1c7c9ecdaae4508ef8396c429c9fe7fa17bcf217983652dbd47cf57424ad4ba9e5264b184ef3d21396a5f573d82a17cb27993', 'PATIENT', NOW(), NOW())
+(5, 'PGS.TS Phạm Thu Hà', 'doctor.ha@clinic.com', 'scrypt:32768:8:1$nN5r2X4Y8mK1lPo9$b186b1f28b7e28325a95610ec3f3e1b04593ceeeacb45be21c7d24268e6f1f4ba407338568eaec60d00f6c243eb2dca79116e0339caec1a8a2bc4a54c86cb321', 'DOCTOR', NOW(), NOW()),
+(6, 'BS. CKI Hoàng Văn Đức', 'doctor.duc@clinic.com', 'scrypt:32768:8:1$nN5r2X4Y8mK1lPo9$b186b1f28b7e28325a95610ec3f3e1b04593ceeeacb45be21c7d24268e6f1f4ba407338568eaec60d00f6c243eb2dca79116e0339caec1a8a2bc4a54c86cb321', 'DOCTOR', NOW(), NOW()),
+(7, 'BS. CKI Vũ Thị Lan', 'doctor.lan@clinic.com', 'scrypt:32768:8:1$nN5r2X4Y8mK1lPo9$b186b1f28b7e28325a95610ec3f3e1b04593ceeeacb45be21c7d24268e6f1f4ba407338568eaec60d00f6c243eb2dca79116e0339caec1a8a2bc4a54c86cb321', 'DOCTOR', NOW(), NOW()),
+(8, 'Nguyễn Văn Hùng', 'patient.hung@gmail.com', 'scrypt:32768:8:1$pT9w4V6B2sQ8zMn3$e79e604f4a3fb3ce51872dfca7a1c7c9ecdaae4508ef8396c429c9fe7fa17bcf217983652dbd47cf57424ad4ba9e5264b184ef3d21396a5f573d82a17cb27993', 'PATIENT', NOW(), NOW()),
+(9, 'Trần Thị Mai', 'patient.lan@gmail.com', 'scrypt:32768:8:1$pT9w4V6B2sQ8zMn3$e79e604f4a3fb3ce51872dfca7a1c7c9ecdaae4508ef8396c429c9fe7fa17bcf217983652dbd47cf57424ad4ba9e5264b184ef3d21396a5f573d82a17cb27993', 'PATIENT', NOW(), NOW())
 ON DUPLICATE KEY UPDATE email=VALUES(email);
 
 -- 3. Thêm Hồ sơ Bác sĩ (Doctors)
 INSERT INTO doctors (id, user_id, specialty_id, phone, description, experience_years, active) VALUES
 (1, 2, 1, '0901234567', 'Chuyên gia hàng đầu về Nội khoa với hơn 12 năm kinh nghiệm chẩn đoán và điều trị các bệnh mãn tính.', 12, 1),
 (2, 3, 2, '0907654321', 'Thạc sĩ chuyên ngành Nhi khoa, tận tâm, giàu kinh nghiệm chăm sóc và thăm khám cho các bệnh nhi.', 7, 1),
-(3, 4, 3, '0912345678', 'Bác sĩ chuyên khoa Da liễu, chuyên sâu về điều trị mụn, sắc tố và phục hồi da liễu thẩm mỹ.', 10, 1)
+(3, 4, 3, '0912345678', 'Bác sĩ chuyên khoa Da liễu, chuyên sâu về điều trị mụn, sắc tố và phục hồi da liễu thẩm mỹ.', 10, 1),
+(4, 5, 4, '0934567890', 'Chuyên gia Tim mạch hàng đầu với hơn 15 năm kinh nghiệm điều trị tăng huyết áp, bệnh mạch vành và rối loạn nhịp tim.', 15, 1),
+(5, 6, 5, '0945678901', 'Bác sĩ chuyên khoa Tai Mũi Họng với 9 năm kinh nghiệm nội soi chẩn đoán và điều trị viêm xoang, viêm amidan, viêm họng mãn tính.', 9, 1),
+(6, 7, 6, '0956789012', 'Chuyên gia Nhãn khoa với 11 năm kinh nghiệm khám đo khúc xạ mắt, điều trị các bệnh lý giác mạc và tật khúc xạ trẻ em.', 11, 1)
 ON DUPLICATE KEY UPDATE phone=VALUES(phone);
 
 -- 4. Thêm Hồ sơ Bệnh nhân (Patients)
@@ -55,7 +61,16 @@ INSERT INTO doctor_schedules (id, doctor_id, date, start_time, end_time, is_avai
 (11, 2, '2026-09-20', '10:00', '10:30', 1),
 (12, 3, '2026-09-21', '09:00', '09:30', 1),
 (13, 3, '2026-09-21', '09:30', '10:00', 1),
-(14, 3, '2026-09-21', '10:00', '10:30', 1)
+(14, 3, '2026-09-21', '10:00', '10:30', 1),
+(15, 4, '2026-09-21', '08:30', '09:00', 1),
+(16, 4, '2026-09-21', '09:00', '09:30', 1),
+(17, 4, '2026-09-21', '09:30', '10:00', 1),
+(18, 5, '2026-09-21', '08:30', '09:00', 1),
+(19, 5, '2026-09-21', '09:00', '09:30', 1),
+(20, 5, '2026-09-21', '09:30', '10:00', 1),
+(21, 6, '2026-09-21', '08:30', '09:00', 1),
+(22, 6, '2026-09-21', '09:00', '09:30', 1),
+(23, 6, '2026-09-21', '09:30', '10:00', 1)
 ON DUPLICATE KEY UPDATE date=VALUES(date);
 
 -- 6. Thêm Lịch Hẹn Khám Mẫu (Appointments)

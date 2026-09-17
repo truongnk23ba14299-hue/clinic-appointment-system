@@ -1,23 +1,62 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../services/api';
+import { DoctorAvatar } from '../components/DoctorAvatar';
 
 const HERO_SLIDES = [
   {
-    url: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1800&q=80',
-    title: 'Phòng khám hiện đại & Bác sĩ tận tâm'
+    id: 1,
+    name: 'BS. CKII Nguyễn Văn An',
+    specialty: 'Khoa Nội khoa',
+    title: 'Trưởng khoa Nội tổng quát',
+    experience: '12 năm kinh nghiệm',
+    desc: 'Chuyên gia đầu ngành về điều trị các bệnh mãn tính, tầm soát sức khỏe toàn diện và tư vấn phác đồ điều trị cá nhân hóa.',
+    url: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=1800&q=80'
   },
   {
-    url: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1800&q=80',
-    title: 'Chăm sóc sức khỏe toàn diện'
+    id: 2,
+    name: 'ThS.BS Đặng Thị Mai',
+    specialty: 'Khoa Nhi khoa',
+    title: 'Bác sĩ Chuyên khoa Nhi',
+    experience: '7 năm kinh nghiệm',
+    desc: 'Tận tâm, thấu hiểu tâm lý trẻ nhỏ, chuyên sâu về chăm sóc sơ sinh, dinh dưỡng và đồng hành cùng sự phát triển của bé.',
+    url: 'https://images.unsplash.com/photo-1622902046580-2b47f47f5471?auto=format&fit=crop&w=1800&q=80'
   },
   {
-    url: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1800&q=80',
-    title: 'Trang thiết bị y tế tiên tiến'
+    id: 3,
+    name: 'ThS.BS Lê Minh Cường',
+    specialty: 'Khoa Da liễu',
+    title: 'Bác sĩ Chuyên khoa Da liễu',
+    experience: '10 năm kinh nghiệm',
+    desc: 'Chuyên sâu điều trị mụn trứng cá chuẩn y khoa, phục hồi màng bảo vệ da và ứng dụng công nghệ thẩm mỹ da hiện đại.',
+    url: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=1800&q=80'
   },
   {
-    url: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1800&q=80',
-    title: 'Đội ngũ y bác sĩ giàu chuyên môn'
+    id: 4,
+    name: 'PGS.TS Phạm Thu Hà',
+    specialty: 'Khoa Tim mạch',
+    title: 'Cố vấn Chuyên môn Tim mạch',
+    experience: '15 năm kinh nghiệm',
+    desc: 'Chuyên gia Tim mạch đầu ngành về tầm soát cao huyết áp, bệnh mạch vành, suy tim và can thiệp điều trị tiên tiến.',
+    url: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=1800&q=80'
+  },
+  {
+    id: 5,
+    name: 'BS. CKI Hoàng Văn Đức',
+    specialty: 'Khoa Tai Mũi Họng',
+    title: 'Bác sĩ Chuyên khoa Tai Mũi Họng',
+    experience: '9 năm kinh nghiệm',
+    desc: 'Nội soi kỹ thuật cao không đau, điều trị dứt điểm viêm xoang, viêm họng mãn tính, viêm amidan và các bệnh lý thanh quản.',
+    url: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=1800&q=80'
+  },
+  {
+    id: 6,
+    name: 'BS. CKI Vũ Thị Lan',
+    specialty: 'Khoa Mắt',
+    title: 'Bác sĩ Chuyên khoa Nhãn khoa',
+    experience: '11 năm kinh nghiệm',
+    desc: 'Khám đo khúc xạ chuyên sâu, kiểm soát cận thị học đường, điều trị nhược thị và các bệnh lý giác mạc bảo vệ thị lực.',
+    url: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&w=1800&q=80'
   }
 ];
 
@@ -52,9 +91,11 @@ export const Home = () => {
     fetchData();
   }, []);
 
+  const currentDoctor = HERO_SLIDES[currentSlide];
+
   return (
     <main>
-      {/* HERO SECTION */}
+      {/* HERO SECTION - BANNER BÁC SĨ TỪNG KHOA */}
       <section className="hero-photo">
         <div className="hero-bg-slider">
           {HERO_SLIDES.map((slide, idx) => (
@@ -67,13 +108,15 @@ export const Home = () => {
           <div className="hero-bg-overlay" />
         </div>
 
+        {/* Indicators cho 6 chuyên khoa */}
         <div className="hero-indicators">
-          {HERO_SLIDES.map((_, idx) => (
+          {HERO_SLIDES.map((slide, idx) => (
             <button
               key={idx}
               className={`hero-indicator-dot ${idx === currentSlide ? 'active' : ''}`}
               onClick={() => setCurrentSlide(idx)}
-              aria-label={`Slide ${idx + 1}`}
+              aria-label={`${slide.specialty}: ${slide.name}`}
+              title={`${slide.specialty}: ${slide.name}`}
             />
           ))}
         </div>
@@ -81,50 +124,99 @@ export const Home = () => {
         <div className="wrap">
           <div className="hero-photo-content">
             <div className="hero-badge">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <circle cx="12" cy="12" r="10" />
                 <polyline points="12 6 12 12 16 14" />
               </svg>
-              MỞ CỬA 24/7 · TIẾP NHẬN ĐẶT LỊCH TRỰC TUYẾN
+              ĐỘI NGŨ BÁC SĨ CHUYÊN KHOA · PHÒNG KHÁM ĐA KHOA GROUP 9
             </div>
             <h1>
-              Chào mừng đến với <span className="highlight">Phòng khám Group 9</span>
+              Chào mừng đến với <span className="highlight">Phòng khám Đa khoa Group 9</span>
             </h1>
-            <p>
-              Đặt lịch khám trực tuyến, lựa chọn bác sĩ chuyên khoa phù hợp và quản lý lịch hẹn
-              thuận tiện, không còn cảnh chờ đợi tại phòng khám.
-            </p>
+
+            {/* Khối thông tin nổi bật của bác sĩ trên slide */}
+            <div
+              style={{
+                background: 'rgba(15, 23, 42, 0.72)',
+                backdropFilter: 'blur(10px)',
+                WebkitBackdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255, 255, 255, 0.22)',
+                borderRadius: 'var(--radius-lg)',
+                padding: '20px 24px',
+                marginTop: '16px',
+                marginBottom: '24px',
+                boxShadow: '0 10px 25px rgba(0,0,0,0.3)'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px', flexWrap: 'wrap' }}>
+                <span
+                  style={{
+                    background: 'var(--primary)',
+                    color: '#fff',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    padding: '3px 12px',
+                    borderRadius: 'var(--radius-full)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}
+                >
+                  {currentDoctor.specialty}
+                </span>
+                <span style={{ color: '#2DD4BF', fontSize: '13px', fontWeight: '600' }}>
+                  {currentDoctor.experience}
+                </span>
+                <span style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '13px' }}>
+                  · {currentDoctor.title}
+                </span>
+              </div>
+              <h2 style={{ fontSize: '24px', fontWeight: '800', margin: '4px 0 8px', color: '#fff', letterSpacing: '-0.02em' }}>
+                {currentDoctor.name}
+              </h2>
+              <p style={{ fontSize: '14.5px', color: 'rgba(255, 255, 255, 0.9)', margin: 0, lineHeight: 1.55 }}>
+                {currentDoctor.desc}
+              </p>
+            </div>
+
             <div className="hero-actions">
-              <Link to="/patient/appointments/book" className="btn btn-primary">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <Link to={`/patient/appointments/book?doctor_id=${currentDoctor.id}`} className="btn btn-primary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
                   <line x1="16" y1="2" x2="16" y2="6" />
                   <line x1="8" y1="2" x2="8" y2="6" />
                   <line x1="3" y1="10" x2="21" y2="10" />
                 </svg>
-                Đặt lịch hẹn ngay
+                Đặt khám với bác sĩ này
               </Link>
-              <Link to="/doctors" className="btn btn-primary">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <Link
+                to="/doctors"
+                className="btn btn-outline"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.12)',
+                  color: '#fff',
+                  borderColor: 'rgba(255, 255, 255, 0.35)'
+                }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <circle cx="11" cy="11" r="8" />
                   <line x1="21" y1="21" x2="16.65" y2="16.65" />
                 </svg>
-                Tìm bác sĩ
+                Xem tất cả bác sĩ
               </Link>
             </div>
 
             <div className="hero-stats">
               <div className="stat-item">
-                <div className="num">50+</div>
-                <div className="lbl">Bác sĩ chuyên khoa</div>
+                <div className="num">6/6</div>
+                <div className="lbl">Khoa có bác sĩ phụ trách</div>
               </div>
               <div className="stat-item">
                 <div className="num">24/7</div>
                 <div className="lbl">Tiếp nhận đặt lịch</div>
               </div>
               <div className="stat-item">
-                <div className="num">99%</div>
-                <div className="lbl">Hài lòng dịch vụ</div>
+                <div className="num">100%</div>
+                <div className="lbl">Bác sĩ chuyên khoa giàu kinh nghiệm</div>
               </div>
             </div>
           </div>
@@ -179,23 +271,7 @@ export const Home = () => {
               {doctors.slice(0, 6).map((doc) => (
                 <div key={doc.id} className="doctor-card">
                   <div className="doctor-card-header">
-                    <div
-                      className="avatar-circle"
-                      style={{
-                        background: '#0D9488',
-                        color: '#FFF',
-                        width: '54px',
-                        height: '54px',
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontWeight: '700',
-                        fontSize: '18px'
-                      }}
-                    >
-                      {doc.name ? doc.name.slice(0, 2).toUpperCase() : 'BS'}
-                    </div>
+                    <DoctorAvatar src={doc.avatar_url} name={doc.name} size={56} />
                     <div>
                       <h3 style={{ margin: 0, fontSize: '17px' }}>
                         <Link to={`/doctors/${doc.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>

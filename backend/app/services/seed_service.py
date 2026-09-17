@@ -45,6 +45,18 @@ class SeedService:
         doc3_u.set_password('Doctor@123')
         db.session.add(doc3_u)
 
+        doc4_u = User(name='PGS.TS Phạm Thu Hà', email='doctor.ha@clinic.com', role='DOCTOR')
+        doc4_u.set_password('Doctor@123')
+        db.session.add(doc4_u)
+
+        doc5_u = User(name='BS. CKI Hoàng Văn Đức', email='doctor.duc@clinic.com', role='DOCTOR')
+        doc5_u.set_password('Doctor@123')
+        db.session.add(doc5_u)
+
+        doc6_u = User(name='BS. CKI Vũ Thị Lan', email='doctor.lan@clinic.com', role='DOCTOR')
+        doc6_u.set_password('Doctor@123')
+        db.session.add(doc6_u)
+
         # Patients
         pat1_u = User(name='Nguyễn Văn Hùng', email='patient.hung@gmail.com', role='PATIENT')
         pat1_u.set_password('Patient@123')
@@ -83,7 +95,31 @@ class SeedService:
             experience_years=10,
             active=True
         )
-        db.session.add_all([doc1, doc2, doc3])
+        doc4 = Doctor(
+            user_id=doc4_u.id,
+            specialty_id=spec_objs[3].id, # Tim mạch
+            phone='0934567890',
+            description='Chuyên gia Tim mạch hàng đầu với hơn 15 năm kinh nghiệm điều trị tăng huyết áp, bệnh mạch vành và rối loạn nhịp tim.',
+            experience_years=15,
+            active=True
+        )
+        doc5 = Doctor(
+            user_id=doc5_u.id,
+            specialty_id=spec_objs[4].id, # Tai Mũi Họng
+            phone='0945678901',
+            description='Bác sĩ chuyên khoa Tai Mũi Họng với 9 năm kinh nghiệm nội soi chẩn đoán và điều trị viêm xoang, viêm amidan, viêm họng mãn tính.',
+            experience_years=9,
+            active=True
+        )
+        doc6 = Doctor(
+            user_id=doc6_u.id,
+            specialty_id=spec_objs[5].id, # Mắt
+            phone='0956789012',
+            description='Chuyên gia Nhãn khoa với 11 năm kinh nghiệm khám đo khúc xạ mắt, điều trị các bệnh lý giác mạc và tật khúc xạ trẻ em.',
+            experience_years=11,
+            active=True
+        )
+        db.session.add_all([doc1, doc2, doc3, doc4, doc5, doc6])
         db.session.flush()
 
         # 4. Patient Profiles
@@ -121,7 +157,7 @@ class SeedService:
 
         sched_objs = []
         for d in [tomorrow, day_after]:
-            for doc in [doc1, doc2, doc3]:
+            for doc in [doc1, doc2, doc3, doc4, doc5, doc6]:
                 for s_time, e_time in time_slots:
                     sch = DoctorSchedule(
                         doctor_id=doc.id,

@@ -31,6 +31,25 @@ def create_app(config_class=Config):
     def health_check():
         return jsonify({'status': 'ok', 'service': 'Clinic Appointment Booking System'}), 200
 
+    # Global error handlers trả về JSON thống nhất
+    @app.errorhandler(400)
+    def bad_request(e):
+        msg = getattr(e, 'description', 'Yêu cầu không hợp lệ')
+        return jsonify({'success': False, 'message': str(msg)}), 400
+
+    @app.errorhandler(404)
+    def not_found(e):
+        msg = getattr(e, 'description', 'Không tìm thấy tài nguyên')
+        return jsonify({'success': False, 'message': str(msg)}), 404
+
+    @app.errorhandler(405)
+    def method_not_allowed(e):
+        return jsonify({'success': False, 'message': 'Phương thức HTTP không được hỗ trợ'}), 405
+
+    @app.errorhandler(500)
+    def internal_server_error(e):
+        return jsonify({'success': False, 'message': 'Lỗi nội bộ hệ thống máy chủ'}), 500
+
     # Khởi tạo bảng và seed data ban đầu
     with app.app_context():
         try:

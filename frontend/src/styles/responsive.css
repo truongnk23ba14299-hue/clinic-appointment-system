@@ -2,6 +2,29 @@
    RESPONSIVE DESIGN STYLES
    ========================================================================== */
 
+@media (max-width: 1120px) and (min-width: 861px) {
+  .brand {
+    font-size: 16px;
+    gap: 8px;
+  }
+  .brand-icon {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+  .main-nav {
+    gap: 2px;
+  }
+  .main-nav a {
+    padding: 6px 9px;
+    font-size: 13.5px;
+  }
+  .site-header .wrap {
+    padding: 0 16px;
+    gap: 10px;
+  }
+}
+
 @media (max-width: 860px) {
   .mobile-toggle {
     display: flex;

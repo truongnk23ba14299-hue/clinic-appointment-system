@@ -1,5 +1,15 @@
 from . import db
 
+# Ảnh đại diện thực tế chuẩn y tế cho từng bác sĩ theo khoa
+DOCTOR_AVATARS = {
+    1: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=800&q=80',  # BS. CKII Nguyễn Văn An (Nội khoa)
+    2: 'https://images.unsplash.com/photo-1622902046580-2b47f47f5471?auto=format&fit=crop&w=800&q=80',  # ThS.BS Đặng Thị Mai (Nhi khoa)
+    3: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=800&q=80',  # ThS.BS Lê Minh Cường (Da liễu)
+    4: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=800&q=80',  # PGS.TS Phạm Thu Hà (Tim mạch)
+    5: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=800&q=80',  # BS. CKI Hoàng Văn Đức (Tai Mũi Họng)
+    6: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&w=800&q=80',  # BS. CKI Vũ Thị Lan (Mắt)
+}
+
 class Doctor(db.Model):
     __tablename__ = 'doctors'
 
@@ -26,5 +36,6 @@ class Doctor(db.Model):
             'specialty_name': self.specialty.name if self.specialty else 'Chưa phân loại',
             'description': self.description,
             'experience_years': self.experience_years,
+            'avatar_url': DOCTOR_AVATARS.get(self.id, 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=800&q=80'),
             'active': self.active
         }

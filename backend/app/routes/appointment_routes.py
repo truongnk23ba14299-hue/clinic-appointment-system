@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
-from ..models import db, Appointment
+from sqlalchemy.orm import joinedload
+from ..models import db, Appointment, Patient, Doctor
 from ..services.appointment_service import AppointmentService
 from ..middleware.auth_middleware import token_required, role_required
 
@@ -26,7 +27,12 @@ def get_appointments():
     status_filter = request.args.get('status')
     date_filter = request.args.get('date')
 
-    query = Appointment.query
+    # Eager loading để triệt tiêu N+1 queries khi gọi .to_dict()
+    query = Appointment.query.options(
+        joinedload(Appointment.patient).joinedload(Patient.user),
+        joinedload(Appointment.doctor).joinedload(Doctor.user),
+        joinedload(Appointment.doctor).joinedload(Doctor.specialty)
+    )
 
     if user.role == 'PATIENT':
         if not user.patient:
@@ -70,7 +76,11 @@ def get_appointments():
 @token_required
 def get_appointment_detail(appointment_id):
     user = request.current_user
-    appt = Appointment.query.get(appointment_id)
+    appt = Appointment.query.options(
+        joinedload(Appointment.patient).joinedload(Patient.user),
+        joinedload(Appointment.doctor).joinedload(Doctor.user),
+        joinedload(Appointment.doctor).joinedload(Doctor.specialty)
+    ).filter(Appointment.id == appointment_id).first()
     if not appt:
         return jsonify({'success': False, 'message': 'Không tìm thấy lịch hẹn'}), 404
 

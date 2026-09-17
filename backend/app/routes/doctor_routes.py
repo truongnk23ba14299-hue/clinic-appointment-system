@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from sqlalchemy.orm import joinedload
 from ..models import db, Doctor, User, Specialty
 from ..middleware.auth_middleware import token_required, role_required
 
@@ -10,7 +11,8 @@ def get_doctors():
     specialty_id = request.args.get('specialty_id')
     include_inactive = request.args.get('include_inactive', 'false').lower() == 'true'
 
-    query = Doctor.query
+    # Eager load user and specialty to prevent N+1 query problem
+    query = Doctor.query.options(joinedload(Doctor.user), joinedload(Doctor.specialty))
 
     if not include_inactive:
         query = query.filter(Doctor.active == True)
@@ -39,7 +41,7 @@ def get_doctors():
 
 @doctor_bp.route('/<int:doctor_id>', methods=['GET'])
 def get_doctor_detail(doctor_id):
-    doctor = db.session.get(Doctor, doctor_id)
+    doctor = Doctor.query.options(joinedload(Doctor.user), joinedload(Doctor.specialty)).filter_by(id=doctor_id).first()
     if not doctor:
         return jsonify({'success': False, 'message': 'Không tìm thấy bác sĩ'}), 404
 

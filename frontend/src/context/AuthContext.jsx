@@ -28,6 +28,15 @@ export const AuthProvider = ({ children }) => {
     };
 
     initAuth();
+
+    const handleUnauthorized = () => {
+      logout();
+    };
+
+    window.addEventListener('auth:unauthorized', handleUnauthorized);
+    return () => {
+      window.removeEventListener('auth:unauthorized', handleUnauthorized);
+    };
   }, []);
 
   const login = async (email, password) => {

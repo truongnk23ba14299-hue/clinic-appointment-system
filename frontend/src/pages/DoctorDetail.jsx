@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { api } from '../services/api';
+import { DoctorAvatar } from '../components/DoctorAvatar';
 
 export const DoctorDetail = () => {
   const { id } = useParams();
@@ -63,24 +64,7 @@ export const DoctorDetail = () => {
 
           {/* Hero Profile Card */}
           <div className="doctor-profile-hero" style={{ marginTop: '16px' }}>
-            <div
-              className="avatar-circle"
-              style={{
-                background: '#0D9488',
-                color: '#FFF',
-                width: '84px',
-                height: '84px',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: '700',
-                fontSize: '28px',
-                flexShrink: 0
-              }}
-            >
-              {doctor.name ? doctor.name.slice(0, 2).toUpperCase() : 'BS'}
-            </div>
+            <DoctorAvatar src={doctor.avatar_url} name={doctor.name} size={84} />
 
             <div style={{ flex: 1 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>

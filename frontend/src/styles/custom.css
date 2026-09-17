@@ -165,10 +165,12 @@
 }
 
 .navbar-user-tag {
-  font-size: 11px;
+  font-size: 11.5px;
   font-weight: 700;
-  padding: 2px 8px;
+  padding: 3px 8px;
   border-radius: 4px;
   background: var(--primary-light);
   color: var(--primary-dark);
+  white-space: nowrap;
+  flex-shrink: 0;
 }

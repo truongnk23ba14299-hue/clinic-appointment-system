@@ -7,7 +7,7 @@ export const Footer = () => {
       <div className="wrap">
         <div className="footer-top">
           <div className="footer-brand">
-            <span className="brand-icon">9</span> Group 9
+            <span className="brand-icon">9</span> Phòng khám Đa khoa Group 9
           </div>
           <nav className="footer-nav">
             <Link to="/">Trang chủ</Link>

@@ -119,16 +119,20 @@ button, input, select, textarea {
   align-items: center;
   justify-content: space-between;
   height: 72px;
+  max-width: 1240px;
+  gap: 16px;
 }
 
 .brand {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--ink);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   letter-spacing: -0.02em;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .brand-icon {
@@ -142,6 +146,11 @@ button, input, select, textarea {
   justify-content: center;
   font-size: 16px;
   font-weight: 800;
+  flex-shrink: 0;
+}
+
+.brand-name {
+  white-space: nowrap;
 }
 
 .brand span.tag {
@@ -154,21 +163,25 @@ button, input, select, textarea {
   font-weight: 600;
   letter-spacing: 0.02em;
   text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .main-nav {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
+  flex-shrink: 1;
 }
 
 .main-nav a {
   font-weight: 500;
   font-size: 14.5px;
   color: var(--muted);
-  padding: 8px 14px;
+  padding: 8px 12px;
   border-radius: var(--radius-sm);
   transition: all var(--transition-fast);
+  white-space: nowrap;
 }
 
 .main-nav a:hover {

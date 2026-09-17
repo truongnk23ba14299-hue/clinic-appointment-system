@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { api } from '../services/api';
+import { DoctorAvatar } from '../components/DoctorAvatar';
 
 export const Doctors = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -136,23 +137,7 @@ export const Doctors = () => {
               {doctors.map((doc) => (
                 <div key={doc.id} className="doctor-card">
                   <div className="doctor-card-header">
-                    <div
-                      className="avatar-circle"
-                      style={{
-                        background: '#0D9488',
-                        color: '#FFF',
-                        width: '54px',
-                        height: '54px',
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontWeight: '700',
-                        fontSize: '18px'
-                      }}
-                    >
-                      {doc.name ? doc.name.slice(0, 2).toUpperCase() : 'BS'}
-                    </div>
+                    <DoctorAvatar src={doc.avatar_url} name={doc.name} size={56} />
                     <div>
                       <h3 style={{ margin: 0, fontSize: '17px' }}>
                         <Link to={`/doctors/${doc.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>

@@ -14,10 +14,9 @@ export const Navbar = () => {
   return (
     <header className="site-header">
       <div className="wrap">
-        <Link to="/" className="brand">
+        <Link to="/" className="brand" title="Phòng khám Đa khoa Group 9">
           <span className="brand-icon">9</span>
-          Group 9
-          <span className="tag">Phòng khám đa khoa</span>
+          <span className="brand-name">Phòng khám Đa khoa Group 9</span>
         </Link>
 
         <nav className="main-nav">
@@ -80,34 +79,45 @@ export const Navbar = () => {
           )}
         </nav>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
           {(!isAuthenticated || role === 'PATIENT') && (
-            <Link to="/patient/appointments/book" className="btn btn-primary btn-sm">
+            <Link to="/patient/appointments/book" className="btn btn-primary btn-sm" style={{ whiteSpace: 'nowrap' }}>
               Đặt lịch ngay
             </Link>
           )}
 
           {!isAuthenticated ? (
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <Link to="/login" className="btn btn-outline btn-sm">
+            <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
+              <Link to="/login" className="btn btn-outline btn-sm" style={{ whiteSpace: 'nowrap' }}>
                 Đăng nhập
               </Link>
-              <Link to="/register" className="btn btn-outline btn-sm">
+              <Link to="/register" className="btn btn-outline btn-sm" style={{ whiteSpace: 'nowrap' }}>
                 Đăng ký
               </Link>
             </div>
           ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
               <span className="navbar-user-tag">
                 {role === 'ADMIN' ? 'Admin' : role === 'DOCTOR' ? 'Bác sĩ' : 'Bệnh nhân'}
               </span>
-              <span style={{ fontSize: '14px', fontWeight: '600', color: 'var(--ink)' }}>
+              <span
+                style={{
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  color: 'var(--ink)',
+                  whiteSpace: 'nowrap',
+                  maxWidth: '160px',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis'
+                }}
+                title={user?.name}
+              >
                 {user?.name}
               </span>
               <button
                 onClick={handleLogout}
                 className="btn btn-outline btn-sm"
-                style={{ padding: '6px 12px', fontSize: '13px' }}
+                style={{ padding: '6px 12px', fontSize: '13px', whiteSpace: 'nowrap' }}
                 title="Đăng xuất khỏi hệ thống"
               >
                 Đăng xuất
