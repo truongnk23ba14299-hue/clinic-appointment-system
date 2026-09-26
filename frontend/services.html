@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dịch vụ & Bảng giá — MedBooking</title>
+<meta name="description" content="Bảng giá gói khám tổng quát, xét nghiệm và các dịch vụ y tế chuyên khoa công khai, minh bạch tại MedBooking.">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="index.html" class="brand">
+      <span class="brand-icon">M</span>
+      MedBooking
+      <span class="tag">Phòng khám đa khoa</span>
+    </a>
+    <nav class="main-nav">
+      <a href="index.html">Trang chủ</a>
+      <a href="departments.html">Phòng ban</a>
+      <a href="doctors.html">Bác sĩ</a>
+      <a href="services.html" class="active">Dịch vụ & Bảng giá</a>
+      <a href="appointments.html">Lịch của tôi</a>
+    </nav>
+    <a href="booking.html" class="btn btn-primary">Đặt lịch ngay</a>
+  </div>
+</header>
+
+<main>
+  <section class="section" style="padding-top: 36px;">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>Bảng giá Dịch vụ & Gói khám</h2>
+          <p>Danh mục khám bệnh minh bạch, rõ ràng với chi phí hợp lý nhất cho quý bệnh nhân</p>
+        </div>
+      </div>
+
+      <!-- Filter Pills -->
+      <div class="pill-row" id="servicePills" style="margin-bottom: 32px;"></div>
+
+      <!-- Service Package Grid -->
+      <div class="service-pkg-grid" id="serviceGrid"></div>
+
+      <!-- FAQ Section -->
+      <div style="margin-top: 64px; padding-top: 40px; border-top: 1px solid var(--border);">
+        <div class="section-head">
+          <div>
+            <h2>Câu hỏi thường gặp về dịch vụ</h2>
+            <p>Giải đáp thắc mắc liên quan tới quy trình khám, bảo hiểm và bảng giá</p>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+          <div class="dept-section">
+            <h3>Chi phí trên đã bao gồm thuế & phí khám chưa?</h3>
+            <p>Tất cả giá niêm yết trên website đã bao gồm chi phí khám lâm sàng, dụng cụ y tế và thuế VAT. Không phát sinh chi phí ẩn.</p>
+          </div>
+          <div class="dept-section">
+            <h3>Phòng khám có áp dụng Bảo hiểm Y tế không?</h3>
+            <p>MedBooking có hỗ trợ bảo lãnh viện phí trực tiếp với các đơn vị bảo hiểm tư nhân (Bảo Việt, PVI, Manulife...) và xuất hóa đơn đỏ để thanh toán BHYT.</p>
+          </div>
+          <div class="dept-section">
+            <h3>Cần chuẩn bị gì trước khi tới thực hiện gói khám tổng quát?</h3>
+            <p>Bạn nên nhịn ăn ít nhất 6-8 tiếng trước khi lấy máu xét nghiệm. Đội ngũ tư vấn sẽ nhắn tin nhắc nhở hướng dẫn chi tiết trước ngày hẹn.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="brand-icon">M</span> MedBooking
+      </div>
+      <nav class="footer-nav">
+        <a href="index.html">Trang chủ</a>
+        <a href="departments.html">Phòng ban</a>
+        <a href="doctors.html">Bác sĩ</a>
+        <a href="services.html">Dịch vụ & Bảng giá</a>
+        <a href="appointments.html">Lịch của tôi</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 MedBooking. Tất cả quyền được bảo lưu.</span>
+      <span>Hotline Cấp cứu: <strong>0336 578 262</strong></span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script>
+  const categories = ["Tất cả", "Gói khám tổng quát", "Chuyên khoa", "Xét nghiệm"];
+  let selectedCategory = "Tất cả";
+
+  const pillsContainer = document.getElementById("servicePills");
+  const serviceGrid = document.getElementById("serviceGrid");
+
+  function renderPills() {
+    pillsContainer.innerHTML = "";
+    categories.forEach(cat => {
+      const btn = document.createElement("button");
+      btn.className = `pill ${cat === selectedCategory ? "active" : ""}`;
+      btn.textContent = cat;
+      btn.addEventListener("click", () => {
+        selectedCategory = cat;
+        renderPills();
+        renderServices();
+      });
+      pillsContainer.appendChild(btn);
+    });
+  }
+
+  function renderServices() {
+    serviceGrid.innerHTML = "";
+    const filtered = selectedCategory === "Tất cả" 
+      ? CLINIC_SERVICES 
+      : CLINIC_SERVICES.filter(s => s.category === selectedCategory);
+
+    filtered.forEach(item => {
+      const card = document.createElement("div");
+      card.className = `service-pkg-card ${item.popular ? 'popular' : ''}`;
+      
+      const badgeHtml = item.popular ? `<div class="service-pkg-badge">Được chọn nhiều nhất</div>` : '';
+      const featureListHtml = item.features.map(f => `<li><span class="check">✓</span> <span>${f}</span></li>`).join('');
+
+      card.innerHTML = `
+        ${badgeHtml}
+        <div class="service-pkg-header">
+          <h3>${item.name}</h3>
+          <div class="service-pkg-price">${item.price}</div>
+        </div>
+        <div class="service-pkg-desc">${item.desc}</div>
+        <ul class="service-pkg-features">
+          ${featureListHtml}
+        </ul>
+        <a href="booking.html" class="btn ${item.popular ? 'btn-primary' : 'btn-outline'}" style="text-align:center;">
+          Đặt gói khám này
+        </a>
+      `;
+      serviceGrid.appendChild(card);
+    });
+  document.addEventListener("DOMContentLoaded", () => {
+    renderPills();
+    renderServices();
+  });
+</script>
+<script src="js/auth.js"></script>
+</body>
+</html>

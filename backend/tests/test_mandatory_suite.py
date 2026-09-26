@@ -359,5 +359,78 @@ class MandatoryTestSuite(unittest.TestCase):
         res_del = self.client.delete(f'/api/doctors/{doc_id}', headers={'Authorization': f'Bearer {admin_token}'})
         self.assertEqual(res_del.status_code, 200)
 
+    # TC-018: Patient tự điền ngày giờ & Full Update lịch hẹn
+    def test_tc018_custom_datetime_booking_and_full_update(self):
+        token = self.get_token('patient.hung@gmail.com', 'Patient@123')
+        target_date = (date.today() + timedelta(days=20)).strftime('%Y-%m-%d')
+        
+        # 1. Đặt lịch tự điền ngày và giờ
+        res_book = self.client.post('/api/appointments', json={
+            'doctor_id': 1,
+            'appointment_date': target_date,
+            'start_time': '16:00',
+            'reason': 'Khám định kỳ tự chọn giờ'
+        }, headers={'Authorization': f'Bearer {token}'})
+        self.assertEqual(res_book.status_code, 201)
+        appt_id = res_book.get_json()['appointment']['id']
+        self.assertEqual(res_book.get_json()['appointment']['start_time'], '16:00')
+
+        # 2. Cập nhật Full Update thông tin lịch hẹn
+        new_target_date = (date.today() + timedelta(days=21)).strftime('%Y-%m-%d')
+        res_update = self.client.put(f'/api/appointments/{appt_id}', json={
+            'doctor_id': 1,
+            'appointment_date': new_target_date,
+            'start_time': '16:30',
+            'reason': 'Đổi sang ngày hôm sau và giờ mới'
+        }, headers={'Authorization': f'Bearer {token}'})
+        self.assertEqual(res_update.status_code, 200)
+        updated = res_update.get_json()['appointment']
+        self.assertEqual(updated['appointment_date'], new_target_date)
+        self.assertEqual(updated['start_time'], '16:30')
+        self.assertEqual(updated['reason'], 'Đổi sang ngày hôm sau và giờ mới')
+
+    # TC-019: Admin Manage User CRUD
+    def test_tc019_admin_user_crud(self):
+        admin_token = self.get_token('admin@clinic.com', 'Admin@123')
+
+        # 1. Lấy danh sách users
+        res_list = self.client.get('/api/users', headers={'Authorization': f'Bearer {admin_token}'})
+        self.assertEqual(res_list.status_code, 200)
+        self.assertTrue(res_list.get_json()['success'])
+
+        # 2. Tạo user mới
+        res_create = self.client.post('/api/users', json={
+            'name': 'Bác Sĩ Mới Tạo',
+            'email': 'bs.moitao@clinic.com',
+            'password': 'Password@123',
+            'role': 'DOCTOR',
+            'phone': '0919998888',
+            'specialty_id': 1
+        }, headers={'Authorization': f'Bearer {admin_token}'})
+        self.assertEqual(res_create.status_code, 201)
+        created_user_id = res_create.get_json()['user']['id']
+
+        # 3. Full Update user
+        res_update = self.client.put(f'/api/users/{created_user_id}', json={
+            'name': 'Bác Sĩ Đã Cập Nhật',
+            'email': 'bs.moitao@clinic.com',
+            'role': 'DOCTOR',
+            'phone': '0988776655'
+        }, headers={'Authorization': f'Bearer {admin_token}'})
+        self.assertEqual(res_update.status_code, 200)
+        self.assertEqual(res_update.get_json()['user']['name'], 'Bác Sĩ Đã Cập Nhật')
+        self.assertEqual(res_update.get_json()['user']['phone'], '0988776655')
+
+        # 4. Xóa user
+        res_del = self.client.delete(f'/api/users/{created_user_id}', headers={'Authorization': f'Bearer {admin_token}'})
+        self.assertEqual(res_del.status_code, 200)
+
+    # TC-020: Phục vụ trực tiếp Frontend HTML
+    def test_tc020_frontend_static_serving(self):
+        res_index = self.client.get('/')
+        self.assertEqual(res_index.status_code, 200)
+        self.assertIn(b'MedBooking', res_index.data)
+
 if __name__ == '__main__':
     unittest.main()
+

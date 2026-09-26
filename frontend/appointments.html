@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lịch của tôi — MedBooking</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/responsive.css">
+<style>
+  .appt-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .appt-info {
+    flex: 1;
+    min-width: 250px;
+  }
+  .appt-status {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .status-PENDING { background: #FEF3C7; color: #92400E; }
+  .status-CONFIRMED { background: #DBEAFE; color: #1E40AF; }
+  .status-COMPLETED { background: #DCFCE7; color: #166534; }
+  .status-CANCELLED { background: #F1F5F9; color: #64748B; text-decoration: line-through; }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15, 23, 42, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.25s ease;
+  }
+  .modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+  .modal-card {
+    background: #fff;
+    width: 90%;
+    max-width: 520px;
+    border-radius: var(--radius-lg);
+    padding: 26px;
+    box-shadow: var(--shadow-lg);
+  }
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="index.html" class="brand">
+      <span class="brand-icon">M</span>
+      MedBooking
+      <span class="tag">Phòng khám đa khoa</span>
+    </a>
+    <nav class="main-nav"></nav>
+  </div>
+</header>
+
+<main>
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>Lịch khám bệnh của tôi</h2>
+          <p>Quản lý, điều chỉnh ngày giờ hoặc hủy lịch hẹn trực tuyến của bạn</p>
+        </div>
+        <a href="booking.html" class="btn btn-primary btn-sm">+ Đặt lịch mới</a>
+      </div>
+
+      <!-- BỘ LỌC TRẠNG THÁI -->
+      <div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;" id="statusFilterBar">
+        <button class="btn btn-outline btn-sm active-tab" onclick="filterStatus('', this)">Tất cả</button>
+        <button class="btn btn-outline btn-sm" onclick="filterStatus('PENDING', this)">Chờ duyệt</button>
+        <button class="btn btn-outline btn-sm" onclick="filterStatus('CONFIRMED', this)">Đã xác nhận</button>
+        <button class="btn btn-outline btn-sm" onclick="filterStatus('COMPLETED', this)">Đã khám xong</button>
+        <button class="btn btn-outline btn-sm" onclick="filterStatus('CANCELLED', this)">Đã hủy</button>
+      </div>
+
+      <div id="appointmentsList">
+        <p style="text-align: center; color: var(--text-muted); padding: 40px;">Đang tải danh sách lịch khám...</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- MODAL CẬP NHẬT FULL LỊCH HẸN (Update Full) -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 style="margin: 0; font-size: 18px;">Cập nhật thông tin lịch khám</h3>
+      <button onclick="closeEditModal()" style="border: none; background: none; font-size: 20px; cursor: pointer;">✕</button>
+    </div>
+    <form id="editForm" onsubmit="handleSaveEdit(event)">
+      <input type="hidden" id="editApptId">
+      
+      <div class="field">
+        <label for="editDoctorSelect">Bác sĩ khám *</label>
+        <select id="editDoctorSelect" required></select>
+      </div>
+
+      <div style="display: flex; gap: 12px;">
+        <div class="field" style="flex: 1;">
+          <label for="editDate">Ngày khám mới *</label>
+          <input type="date" id="editDate" required>
+        </div>
+        <div class="field" style="flex: 1;">
+          <label for="editTime">Giờ khám mới *</label>
+          <input type="time" id="editTime" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="editReason">Lý do / Triệu chứng khám</label>
+        <textarea id="editReason" rows="3"></textarea>
+      </div>
+
+      <div id="editAlert" style="display: none; padding: 10px; border-radius: var(--radius); margin-bottom: 12px; font-size: 13px; background: #FEE2E2; color: #991B1B;"></div>
+
+      <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px;">
+        <button type="button" class="btn btn-outline btn-sm" onclick="closeEditModal()">Hủy</button>
+        <button type="submit" id="btnSaveEdit" class="btn btn-primary btn-sm">Lưu cập nhật (Full Update)</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-bottom">
+      <span>© 2026 MedBooking. Tất cả quyền được bảo lưu.</span>
+      <span>Hotline Cấp cứu: <strong>0336 578 262</strong></span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/auth.js"></script>
+<script>
+  let allAppointments = [];
+  let currentFilter = '';
+  let doctorOptions = [];
+
+  // Tải danh sách bác sĩ cho modal edit
+  async function loadDoctorOptions() {
+    const res = await apiCall('/doctors');
+    if (res.success && res.doctors) {
+      doctorOptions = res.doctors;
+      const select = document.getElementById('editDoctorSelect');
+      select.innerHTML = res.doctors.map(d => `<option value="${d.id}">${d.name} (${d.specialty_name || 'Bác sĩ'})</option>`).join('');
+    }
+  }
+
+  // Tải danh sách lịch hẹn của bệnh nhân
+  async function loadAppointments() {
+    const res = await apiCall('/appointments');
+    const container = document.getElementById('appointmentsList');
+
+    if (res.success && res.appointments) {
+      allAppointments = res.appointments;
+      renderList();
+    } else {
+      container.innerHTML = `<p style="text-align: center; color: #DC2626;">${res.message || 'Lỗi tải lịch hẹn'}</p>`;
+    }
+  }
+
+  function filterStatus(status, el) {
+    currentFilter = status;
+    document.querySelectorAll('#statusFilterBar .btn').forEach(b => b.classList.remove('active-tab'));
+    if (el) el.classList.add('active-tab');
+    renderList();
+  }
+
+  function renderList() {
+    const container = document.getElementById('appointmentsList');
+    const filtered = allAppointments.filter(a => !currentFilter || a.status === currentFilter);
+
+    if (filtered.length === 0) {
+      container.innerHTML = `
+        <div style="text-align: center; padding: 40px; background: #fff; border-radius: var(--radius); border: 1px solid var(--border);">
+          <p style="color: var(--text-muted); font-size: 15px; margin-bottom: 12px;">Bạn không có lịch hẹn nào ${currentFilter ? 'ở trạng thái này' : ''}.</p>
+          <a href="booking.html" class="btn btn-primary btn-sm">Đặt lịch khám ngay</a>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = filtered.map(a => {
+      let statusLabel = 'Chờ xác nhận';
+      if (a.status === 'CONFIRMED') statusLabel = 'Đã xác nhận';
+      else if (a.status === 'COMPLETED') statusLabel = 'Đã khám xong';
+      else if (a.status === 'CANCELLED') statusLabel = 'Đã hủy hẹn';
+
+      const canEditOrCancel = a.status === 'PENDING' || a.status === 'CONFIRMED';
+
+      return `
+        <div class="appt-card">
+          <div class="appt-info">
+            <span class="appt-status status-${a.status}">${statusLabel}</span>
+            <h3 style="font-size: 18px; margin: 0 0 6px;">BS. ${a.doctor_name || 'Chuyên khoa'} <span style="font-size: 14px; font-weight: normal; color: var(--text-muted);">(${a.specialty_name || 'Khám bệnh'})</span></h3>
+            <p style="margin: 0 0 4px; font-size: 14px; color: var(--text-dark);">
+              ⏰ Thời gian: <strong>${a.start_time}</strong> · Ngày: <strong>${a.appointment_date}</strong>
+            </p>
+            <p style="margin: 0; font-size: 13px; color: var(--text-muted);">
+              Lý do khám: ${a.reason ? `<em>${a.reason}</em>` : 'Không có ghi chú'}
+            </p>
+          </div>
+
+          <div style="display: flex; gap: 8px;">
+            ${canEditOrCancel ? `
+              <button class="btn btn-outline btn-sm" onclick="openEditModal(${a.id})">✏️ Sửa (Update Full)</button>
+              <button class="btn btn-outline btn-sm" style="color: #DC2626; border-color: #F87171;" onclick="handleCancel(${a.id})">✕ Hủy lịch</button>
+            ` : `
+              <span style="font-size: 13px; color: var(--text-muted); padding: 6px 12px;">(Không thể chỉnh sửa)</span>
+            `}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Mở modal sửa lịch hẹn
+  function openEditModal(apptId) {
+    const appt = allAppointments.find(a => a.id === apptId);
+    if (!appt) return;
+
+    document.getElementById('editApptId').value = appt.id;
+    document.getElementById('editDoctorSelect').value = appt.doctor_id;
+    document.getElementById('editDate').value = appt.appointment_date;
+    document.getElementById('editTime').value = appt.start_time;
+    document.getElementById('editReason').value = appt.reason || '';
+
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('editDate').min = today;
+
+    document.getElementById('editAlert').style.display = 'none';
+    document.getElementById('editModal').classList.add('active');
+  }
+
+  function closeEditModal() {
+    document.getElementById('editModal').classList.remove('active');
+  }
+
+  // Lưu cập nhật full thông tin lịch hẹn (Full Update)
+  async function handleSaveEdit(e) {
+    e.preventDefault();
+    const id = document.getElementById('editApptId').value;
+    const doctor_id = document.getElementById('editDoctorSelect').value;
+    const appointment_date = document.getElementById('editDate').value;
+    const start_time = document.getElementById('editTime').value;
+    const reason = document.getElementById('editReason').value.trim();
+
+    const alertBox = document.getElementById('editAlert');
+    const btn = document.getElementById('btnSaveEdit');
+    btn.disabled = true;
+    btn.textContent = 'Đang lưu...';
+
+    const res = await apiCall(`/appointments/${id}`, 'PUT', {
+      doctor_id: parseInt(doctor_id, 10),
+      appointment_date,
+      start_time,
+      reason
+    });
+
+    btn.disabled = false;
+    btn.textContent = 'Lưu cập nhật (Full Update)';
+
+    if (res.success) {
+      closeEditModal();
+      await loadAppointments();
+      alert('Cập nhật toàn bộ thông tin lịch hẹn thành công!');
+    } else {
+      alertBox.textContent = res.message || 'Lỗi khi cập nhật lịch hẹn.';
+      alertBox.style.display = 'block';
+    }
+  }
+
+  // Hủy lịch hẹn
+  async function handleCancel(id) {
+    if (!confirm('Bạn có chắc chắn muốn hủy lịch hẹn khám này không?')) return;
+
+    const res = await apiCall(`/appointments/${id}`, 'DELETE');
+    if (res.success) {
+      alert('Đã hủy lịch hẹn thành công!');
+      await loadAppointments();
+    } else {
+      alert(res.message || 'Lỗi khi hủy lịch hẹn.');
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    // Bảo vệ trang: Chỉ dành cho PATIENT
+    if (!requireAuth(['PATIENT'])) return;
+
+    await loadDoctorOptions();
+    await loadAppointments();
+  });
+</script>
+</body>
+</html>

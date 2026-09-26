@@ -10,7 +10,7 @@ class Appointment(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     patient_id = db.Column(db.Integer, db.ForeignKey('patients.id', ondelete='CASCADE'), nullable=False)
     doctor_id = db.Column(db.Integer, db.ForeignKey('doctors.id', ondelete='CASCADE'), nullable=False)
-    schedule_id = db.Column(db.Integer, db.ForeignKey('doctor_schedules.id', ondelete='CASCADE'), nullable=False)
+    schedule_id = db.Column(db.Integer, db.ForeignKey('doctor_schedules.id', ondelete='CASCADE'), nullable=True)
     appointment_date = db.Column(db.Date, nullable=False)
     start_time = db.Column(db.String(10), nullable=False)
     reason = db.Column(db.Text, nullable=True)

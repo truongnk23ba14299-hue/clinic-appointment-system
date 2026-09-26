@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đặt lịch khám — MedBooking</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/responsive.css">
+<style>
+  .booking-wrap {
+    max-width: 650px;
+    margin: 30px auto;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    box-shadow: var(--shadow-sm);
+  }
+  .booking-head {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .field-row {
+    display: flex;
+    gap: 16px;
+  }
+  .field-row .field {
+    flex: 1;
+  }
+  .alert-box {
+    padding: 12px 16px;
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+    font-size: 14px;
+    display: none;
+  }
+  .alert-box.error {
+    background: #FEE2E2;
+    color: #991B1B;
+    border: 1px solid #F87171;
+    display: block;
+  }
+  .alert-box.success {
+    background: #DCFCE7;
+    color: #166534;
+    border: 1px solid #4ADE80;
+    display: block;
+  }
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15, 23, 42, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.25s ease;
+  }
+  .modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+  .modal-card {
+    background: #fff;
+    width: 90%;
+    max-width: 480px;
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    transform: translateY(20px);
+    transition: all 0.25s ease;
+  }
+  .modal-overlay.active .modal-card {
+    transform: translateY(0);
+  }
+  .time-quick-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .time-pill {
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 13px;
+    background: #F8FAFC;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .time-pill:hover, .time-pill.selected {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="index.html" class="brand">
+      <span class="brand-icon">M</span>
+      MedBooking
+      <span class="tag">Phòng khám đa khoa</span>
+    </a>
+    <nav class="main-nav"></nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="booking-wrap">
+      <div class="booking-head">
+        <h2 style="font-size: 24px; margin-bottom: 6px;">Đăng ký khám bệnh trực tuyến</h2>
+        <p style="color: var(--text-muted); font-size: 14px; margin: 0;">
+          Chủ động lựa chọn bác sĩ và tự điền ngày giờ khám phù hợp với bạn
+        </p>
+      </div>
+
+      <div id="bookingAlert" class="alert-box"></div>
+
+      <form id="bookingForm" onsubmit="handleBooking(event)">
+        <!-- 1. CHỌN BÁC SĨ -->
+        <div class="field">
+          <label for="doctorSelect">1. Bác sĩ chuyên khoa khám *</label>
+          <select id="doctorSelect" required>
+            <option value="">— Đang tải danh sách bác sĩ... —</option>
+          </select>
+        </div>
+
+        <!-- 2. TỰ ĐIỀN NGÀY VÀ GIỜ KHÁM (Người đặt lịch tự điền ngày giờ) -->
+        <div class="field-row">
+          <div class="field">
+            <label for="appointmentDate">2. Chọn ngày khám *</label>
+            <input type="date" id="appointmentDate" required>
+          </div>
+          <div class="field">
+            <label for="startTime">3. Chọn giờ khám * (Ví dụ: 08:30)</label>
+            <input type="time" id="startTime" required value="08:30" step="900">
+          </div>
+        </div>
+
+        <!-- Các khung giờ gợi ý nhanh -->
+        <div style="margin-top: -6px; margin-bottom: 16px;">
+          <span style="font-size: 12px; color: var(--text-muted);">Khung giờ phổ biến:</span>
+          <div class="time-quick-pills">
+            <span class="time-pill selected" onclick="setTime('08:30', this)">08:30</span>
+            <span class="time-pill" onclick="setTime('09:00', this)">09:00</span>
+            <span class="time-pill" onclick="setTime('09:30', this)">09:30</span>
+            <span class="time-pill" onclick="setTime('10:00', this)">10:00</span>
+            <span class="time-pill" onclick="setTime('14:00', this)">14:00</span>
+            <span class="time-pill" onclick="setTime('14:30', this)">14:30</span>
+            <span class="time-pill" onclick="setTime('15:00', this)">15:00</span>
+            <span class="time-pill" onclick="setTime('15:30', this)">15:30</span>
+          </div>
+        </div>
+
+        <!-- 4. LÝ DO / TRIỆU CHỨNG KHÁM -->
+        <div class="field">
+          <label for="reason">4. Triệu chứng hoặc lý do khám bệnh (không bắt buộc)</label>
+          <textarea id="reason" rows="3" placeholder="Ví dụ: Đau đầu, sốt nhẹ 2 ngày nay, cần tư vấn..."></textarea>
+        </div>
+
+        <button type="submit" id="btnSubmitBooking" class="btn btn-primary" style="width: 100%; padding: 13px; font-size: 16px; margin-top: 10px;">
+          Xác nhận đặt lịch khám
+        </button>
+      </form>
+    </div>
+  </div>
+</main>
+
+<!-- MODAL THÀNH CÔNG -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal-card">
+    <div style="font-size: 54px; color: var(--primary); margin-bottom: 10px;">✓</div>
+    <h3 style="font-size: 22px; margin-bottom: 10px;">Đặt lịch khám thành công!</h3>
+    <p id="successModalMsg" style="color: var(--text-dark); line-height: 1.6; font-size: 14px; margin-bottom: 24px;"></p>
+    <div style="display: flex; gap: 12px; justify-content: center;">
+      <a href="appointments.html" class="btn btn-primary" style="flex: 1;">Xem lịch của tôi</a>
+      <button class="btn btn-outline" style="flex: 1;" onclick="closeModal()">Đặt lịch tiếp</button>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-bottom">
+      <span>© 2026 MedBooking. Tất cả quyền được bảo lưu.</span>
+      <span>Hotline Cấp cứu: <strong>0336 578 262</strong></span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/auth.js"></script>
+<script>
+  function setTime(val, el) {
+    document.getElementById('startTime').value = val;
+    document.querySelectorAll('.time-pill').forEach(p => p.classList.remove('selected'));
+    if (el) el.classList.add('selected');
+  }
+
+  function showAlert(msg, isError = true) {
+    const el = document.getElementById('bookingAlert');
+    el.textContent = msg;
+    el.className = isError ? 'alert-box error' : 'alert-box success';
+  }
+
+  function clearAlert() {
+    const el = document.getElementById('bookingAlert');
+    el.className = 'alert-box';
+    el.style.display = 'none';
+  }
+
+  // Tải danh sách bác sĩ
+  async function loadDoctors() {
+    const res = await apiCall('/doctors');
+    const select = document.getElementById('doctorSelect');
+    if (res.success && res.doctors) {
+      select.innerHTML = '<option value="">— Chọn bác sĩ thăm khám —</option>';
+      res.doctors.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d.id;
+        opt.textContent = `${d.name} (${d.specialty_name || 'Bác sĩ'})`;
+        select.appendChild(opt);
+      });
+
+      // Kiểm tra param URL ?doctor_id=...
+      const urlParams = new URLSearchParams(window.location.search);
+      const docParam = urlParams.get('doctor_id') || urlParams.get('doctor');
+      if (docParam) {
+        select.value = docParam;
+      }
+    } else {
+      select.innerHTML = '<option value="">Lỗi tải danh sách bác sĩ</option>';
+    }
+  }
+
+  // Khởi tạo ngày khám mặc định (ngày mai hoặc hôm nay)
+  function initDateInput() {
+    const dateInput = document.getElementById('appointmentDate');
+    const today = new Date();
+    // Format YYYY-MM-DD
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    const todayStr = `${yyyy}-${mm}-${dd}`;
+
+    dateInput.min = todayStr;
+    dateInput.value = todayStr;
+  }
+
+  // Xử lý gửi Form đặt lịch
+  async function handleBooking(e) {
+    e.preventDefault();
+    clearAlert();
+
+    const user = getUser();
+    if (!user) {
+      alert('Vui lòng đăng nhập tài khoản Bệnh nhân để đặt lịch khám.');
+      window.location.href = 'login.html?redirect=booking.html';
+      return;
+    }
+
+    if (user.role !== 'PATIENT') {
+      showAlert('Chỉ tài khoản Bệnh nhân mới có quyền đặt lịch khám. Vui lòng đăng nhập bằng tài khoản Bệnh nhân.');
+      return;
+    }
+
+    const doctorId = document.getElementById('doctorSelect').value;
+    const dateVal = document.getElementById('appointmentDate').value;
+    const timeVal = document.getElementById('startTime').value;
+    const reason = document.getElementById('reason').value.trim();
+
+    if (!doctorId) {
+      showAlert('Vui lòng chọn bác sĩ khám bệnh.');
+      return;
+    }
+
+    if (!dateVal || !timeVal) {
+      showAlert('Vui lòng điền đầy đủ ngày khám và giờ khám.');
+      return;
+    }
+
+    const btn = document.getElementById('btnSubmitBooking');
+    btn.disabled = true;
+    btn.textContent = 'Đang đặt lịch...';
+
+    const res = await apiCall('/appointments', 'POST', {
+      doctor_id: parseInt(doctorId, 10),
+      appointment_date: dateVal,
+      start_time: timeVal,
+      reason: reason
+    });
+
+    btn.disabled = false;
+    btn.textContent = 'Xác nhận đặt lịch khám';
+
+    if (res.success && res.appointment) {
+      const appt = res.appointment;
+      const modalMsg = `
+        Bạn đã đặt hẹn thành công với <strong>${appt.doctor_name}</strong> (${appt.specialty_name || 'Bác sĩ'})<br>
+        Vào lúc: <strong>${appt.start_time}</strong> ngày <strong>${appt.appointment_date}</strong>.<br>
+        Mã lịch hẹn: <strong>#${appt.id}</strong> (Trạng thái: <em>Chờ duyệt PENDING</em>)
+      `;
+      document.getElementById('successModalMsg').innerHTML = modalMsg;
+      document.getElementById('successModal').classList.add('active');
+      document.getElementById('bookingForm').reset();
+      initDateInput();
+    } else {
+      showAlert(res.message || 'Không thể đặt lịch khám. Vui lòng thử lại.');
+    }
+  }
+
+  function closeModal() {
+    document.getElementById('successModal').classList.remove('active');
+  }
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    initDateInput();
+    await loadDoctors();
+  });
+</script>
+</body>
+</html>

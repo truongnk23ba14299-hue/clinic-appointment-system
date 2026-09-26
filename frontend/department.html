@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chi tiết phòng ban — MedBooking</title>
+<meta name="description" content="Thông tin chi tiết về khoa chuyên môn tại Phòng khám MedBooking. Các dịch vụ khám chữa bệnh và đội ngũ bác sĩ chuyên khoa.">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="index.html" class="brand">
+      <span class="brand-icon">M</span>
+      MedBooking
+      <span class="tag">Phòng khám đa khoa</span>
+    </a>
+    <nav class="main-nav">
+      <a href="index.html">Trang chủ</a>
+      <a href="departments.html" class="active">Phòng ban</a>
+      <a href="doctors.html">Bác sĩ</a>
+      <a href="services.html">Dịch vụ & Bảng giá</a>
+      <a href="appointments.html">Lịch của tôi</a>
+    </nav>
+    <a href="booking.html" class="btn btn-primary">Đặt lịch ngay</a>
+  </div>
+</header>
+
+<main>
+  <section class="section" style="padding-top:36px;">
+    <div class="wrap" style="max-width: 880px;">
+
+      <a href="departments.html" class="back-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Trở lại danh sách phòng ban
+      </a>
+
+      <h1 class="dept-detail-title" id="deptTitle">—</h1>
+      <p class="dept-detail-subtitle" id="deptSubtitle">—</p>
+
+      <div class="dept-banner" id="deptBanner"></div>
+
+      <div class="dept-section">
+        <h2>Giới thiệu về khoa</h2>
+        <p id="deptIntro">—</p>
+      </div>
+
+      <div class="dept-section">
+        <h2>Các dịch vụ nổi bật</h2>
+        <div class="service-grid" id="deptServices"></div>
+      </div>
+
+      <div class="doctor-note-box">
+        <h3>Lời nhắn từ bác sĩ Trưởng khoa</h3>
+        <p id="deptNote">—</p>
+      </div>
+
+      <div style="margin-top: 36px; display: flex; gap: 16px; flex-wrap: wrap;">
+        <a id="btnDeptDoctors" href="doctors.html" class="btn btn-primary">
+          Xem bác sĩ thuộc khoa này
+        </a>
+        <a href="booking.html" class="btn btn-outline">
+          Đặt lịch hẹn trực tiếp
+        </a>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="brand-icon">M</span> MedBooking
+      </div>
+      <nav class="footer-nav">
+        <a href="index.html">Trang chủ</a>
+        <a href="departments.html">Phòng ban</a>
+        <a href="doctors.html">Bác sĩ</a>
+        <a href="services.html">Dịch vụ & Bảng giá</a>
+        <a href="appointments.html">Lịch của tôi</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 MedBooking. Tất cả quyền được bảo lưu.</span>
+      <span>Hotline Cấp cứu: <strong>0336 578 262</strong></span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const specialty = params.get("specialty") || SPECIALTIES[0];
+  const index = SPECIALTIES.indexOf(specialty);
+  const info = DEPT_INFO[specialty];
+
+  document.title = `${specialty} — MedBooking`;
+  document.getElementById("deptTitle").textContent = specialty;
+  document.getElementById("btnDeptDoctors").href = `doctors.html?specialty=${encodeURIComponent(specialty)}`;
+
+  if (info) {
+    document.getElementById("deptSubtitle").textContent = info.subtitle;
+    document.getElementById("deptIntro").textContent = info.intro;
+    document.getElementById("deptNote").textContent = `"${info.doctorNote}"`;
+
+    const grid = document.getElementById("deptServices");
+    info.services.forEach(s => {
+      const div = document.createElement("div");
+      div.className = "service-item";
+      div.innerHTML = `<span class="check-icon">✓</span> <span>${s}</span>`;
+      grid.appendChild(div);
+    });
+  }
+
+  const banner = document.getElementById("deptBanner");
+  const imgUrl = DEPT_IMAGES[index >= 0 ? index : 0];
+  banner.style.backgroundImage = `url('${imgUrl}')`;
+</script>
+<script src="js/auth.js"></script>
+</body>
+</html>

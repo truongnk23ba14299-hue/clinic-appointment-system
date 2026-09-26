@@ -1,17 +1,218 @@
 <!DOCTYPE html>
 <html lang="vi">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Group 9 — Đặt lịch khám bệnh trực tuyến</title>
-    <meta name="description" content="Đặt lịch khám bệnh trực tuyến nhanh chóng, chọn bác sĩ theo chuyên khoa và quản lý lịch hẹn dễ dàng tại Phòng khám Đa khoa Group 9.">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedBooking — Đặt lịch khám bệnh trực tuyến</title>
+<meta name="description" content="Đặt lịch khám bệnh trực tuyến nhanh chóng, chọn bác sĩ theo chuyên khoa và quản lý lịch hẹn dễ dàng tại Phòng khám Đa khoa MedBooking.">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="index.html" class="brand">
+      <span class="brand-icon">M</span>
+      MedBooking
+      <span class="tag">Phòng khám đa khoa</span>
+    </a>
+    <nav class="main-nav"></nav>
+  </div>
+</header>
+
+<main>
+  <!-- HERO BANNER -->
+  <section class="hero-section">
+    <div class="wrap">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="pulse-dot"></span>
+          TIẾP NHẬN BỆNH NHÂN 24/7 · TẬN TÂM CHUYÊN NGHIỆP
+        </div>
+        <h1>Chào mừng đến với <span class="highlight">Phòng khám MedBooking</span></h1>
+        <p>Đặt lịch khám trực tuyến, lựa chọn ngày giờ mong muốn và quản lý lịch hẹn của bạn chỉ trong vài thao tác đơn giản.</p>
+        <div class="hero-actions">
+          <a href="booking.html" class="btn btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Đặt lịch khám ngay
+          </a>
+          <a href="doctors.html" class="btn btn-outline">
+            Xem danh sách Bác sĩ
+          </a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="num">15+</div>
+            <div class="lbl">Bác sĩ chuyên khoa</div>
+          </div>
+          <div class="stat-item">
+            <div class="num">6+</div>
+            <div class="lbl">Chuyên khoa mũi nhọn</div>
+          </div>
+          <div class="stat-item">
+            <div class="num">99%</div>
+            <div class="lbl">Bệnh nhân hài lòng</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHUYÊN KHOA NỔI BẬT -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>Chuyên khoa khám bệnh</h2>
+          <p>Lựa chọn chuyên khoa phù hợp để thăm khám cùng bác sĩ chuyên môn</p>
+        </div>
+        <a href="departments.html" class="btn btn-outline btn-sm">Xem tất cả khoa →</a>
+      </div>
+      <div class="pill-row" id="specialtyPills">
+        <span style="font-size: 13px; color: var(--text-muted);">Đang tải danh mục chuyên khoa...</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- BÁC SĨ NỔI BẬT -->
+  <section class="section section-alt">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>Đội ngũ bác sĩ tiêu biểu</h2>
+          <p>Các chuyên gia giàu kinh nghiệm sẵn sàng thăm khám và tư vấn tận tình</p>
+        </div>
+        <a href="doctors.html" class="btn btn-outline btn-sm">Xem toàn bộ Bác sĩ →</a>
+      </div>
+      <div class="doctor-grid" id="doctorPreview">
+        <p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">Đang tải danh sách bác sĩ...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUY TRÌNH 4 BƯỚC -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>Quy trình đặt lịch đơn giản</h2>
+          <p>Khám chữa bệnh nhanh chóng, tiện lợi, không phải xếp hàng chờ đợi</p>
+        </div>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="icon-box">1</div>
+          <h3>Đăng nhập / Đăng ký</h3>
+          <p>Tạo tài khoản hoặc đăng nhập nhanh bằng số điện thoại và email cá nhân.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon-box">2</div>
+          <h3>Chọn Bác sĩ & Ngày giờ</h3>
+          <p>Chủ động chọn bác sĩ theo chuyên khoa và tự điền ngày giờ khám phù hợp với lịch cá nhân.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon-box">3</div>
+          <h3>Xác nhận lịch hẹn</h3>
+          <p>Hệ thống tự động lưu giữ chỗ và thông báo xác nhận lịch hẹn tức thì.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon-box">4</div>
+          <h3>Đến khám đúng giờ</h3>
+          <p>Đến phòng khám theo lịch đã hẹn, ưu tiên vào khám không cần bốc số chờ đợi.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="brand-icon">M</span> MedBooking
+      </div>
+      <nav class="footer-nav">
+        <a href="index.html">Trang chủ</a>
+        <a href="departments.html">Chuyên khoa</a>
+        <a href="doctors.html">Bác sĩ</a>
+        <a href="booking.html">Đặt lịch</a>
+        <a href="appointments.html">Lịch của tôi</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 MedBooking. Tất cả quyền được bảo lưu.</span>
+      <span>Hotline Cấp cứu & Tư vấn: <strong>0336 578 262</strong></span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/auth.js"></script>
+<script>
+  // Tải danh mục chuyên khoa từ API
+  async function loadSpecialties() {
+    const res = await apiCall('/specialties');
+    const pillRow = document.getElementById('specialtyPills');
+    if (res.success && res.specialties && res.specialties.length > 0) {
+      pillRow.innerHTML = res.specialties.map(s => `
+        <a href="doctors.html?specialty=${encodeURIComponent(s.name)}" class="pill">
+          ${s.name}
+        </a>
+      `).join('');
+    } else {
+      pillRow.innerHTML = `
+        <a href="doctors.html?specialty=Nội khoa" class="pill">Nội khoa</a>
+        <a href="doctors.html?specialty=Nhi khoa" class="pill">Nhi khoa</a>
+        <a href="doctors.html?specialty=Da liễu" class="pill">Da liễu</a>
+        <a href="doctors.html?specialty=Tim mạch" class="pill">Tim mạch</a>
+        <a href="doctors.html?specialty=Tai Mũi Họng" class="pill">Tai Mũi Họng</a>
+      `;
+    }
+  }
+
+  // Tải danh sách bác sĩ tiêu biểu từ API
+  async function loadFeaturedDoctors() {
+    const res = await apiCall('/doctors');
+    const container = document.getElementById('doctorPreview');
+    if (res.success && res.doctors && res.doctors.length > 0) {
+      const top3 = res.doctors.slice(0, 3);
+      container.innerHTML = top3.map(d => `
+        <div class="stub">
+          <div class="stub-top">
+            <div class="stub-avatar" style="--avatar-bg: #0D9488" title="BS. ${d.name}">
+              ${d.name ? d.name.split(' ').pop().substring(0, 2).toUpperCase() : 'BS'}
+            </div>
+            <div class="stub-info">
+              <h3><a href="doctor.html?id=${d.id}" class="doctor-link">${d.name}</a></h3>
+              <span class="badge">${d.specialty_name || 'Bác sĩ chuyên khoa'}</span>
+            </div>
+          </div>
+          <div class="stub-meta">
+            <span class="stub-rating">★ 4.9</span>
+            <span>(${d.experience_years || 5} năm kinh nghiệm)</span>
+          </div>
+          <div class="stub-bottom">
+            <span class="note">${d.description || 'Thăm khám tận tâm và tư vấn kỹ lưỡng cho bệnh nhân.'}</span>
+            <div class="stub-actions" style="display: flex; gap: 8px; margin-top: 10px;">
+              <a class="btn btn-outline btn-sm" style="flex:1;" href="doctor.html?id=${d.id}">Chi tiết</a>
+              <a class="btn btn-primary btn-sm" style="flex:1;" href="booking.html?doctor_id=${d.id}">Đặt lịch</a>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    } else {
+      container.innerHTML = `<p style="grid-column: 1/-1; text-align: center;">Chưa có dữ liệu bác sĩ.</p>`;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    loadSpecialties();
+    loadFeaturedDoctors();
+  });
+</script>
+</body>
 </html>

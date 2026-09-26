@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thông tin Bác sĩ — MedBooking</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/responsive.css">
+<style>
+  .profile-header-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .profile-avatar-lg {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: 700;
+  }
+  .profile-info {
+    flex: 1;
+    min-width: 260px;
+  }
+  .profile-details-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 768px) {
+    .profile-details-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .info-box {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 20px;
+  }
+  .info-box h3 {
+    margin-bottom: 14px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="index.html" class="brand">
+      <span class="brand-icon">M</span>
+      MedBooking
+      <span class="tag">Phòng khám đa khoa</span>
+    </a>
+    <nav class="main-nav"></nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap" style="padding-top: 24px; padding-bottom: 40px;">
+    <div style="margin-bottom: 16px;">
+      <a href="doctors.html" style="font-size: 14px; color: var(--primary); text-decoration: none;">← Quay lại danh sách bác sĩ</a>
+    </div>
+
+    <div id="doctorProfileArea">
+      <p style="text-align: center; color: var(--text-muted); padding: 40px;">Đang tải thông tin bác sĩ...</p>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-bottom">
+      <span>© 2026 MedBooking. Tất cả quyền được bảo lưu.</span>
+      <span>Hotline Cấp cứu: <strong>0336 578 262</strong></span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/auth.js"></script>
+<script>
+  async function loadDoctorDetail() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const doctorId = urlParams.get('id');
+    const container = document.getElementById('doctorProfileArea');
+
+    if (!doctorId) {
+      container.innerHTML = `<p style="text-align:center; color: #DC2626;">Không tìm thấy mã bác sĩ.</p>`;
+      return;
+    }
+
+    const res = await apiCall(`/doctors/${doctorId}`);
+    if (!res.success || !res.doctor) {
+      container.innerHTML = `<p style="text-align:center; color: #DC2626;">Không thể tải thông tin bác sĩ hoặc bác sĩ không tồn tại.</p>`;
+      return;
+    }
+
+    const d = res.doctor;
+    const initials = d.name ? d.name.split(' ').pop().substring(0, 2).toUpperCase() : 'BS';
+
+    container.innerHTML = `
+      <div class="profile-header-card">
+        <div class="profile-avatar-lg">
+          ${initials}
+        </div>
+        <div class="profile-info">
+          <span class="badge" style="margin-bottom: 8px;">${d.specialty_name || 'Bác sĩ chuyên khoa'}</span>
+          <h2 style="font-size: 26px; margin: 4px 0 8px;">${d.name}</h2>
+          <p style="color: var(--text-muted); font-size: 14px; margin: 0;">
+            Kinh nghiệm: <strong>${d.experience_years || 5} năm</strong> · Đánh giá: <strong>★ 4.9 (Xuất sắc)</strong>
+          </p>
+        </div>
+        <div>
+          <a href="booking.html?doctor_id=${d.id}" class="btn btn-primary" style="padding: 12px 24px; font-size: 15px;">
+            📅 Đặt lịch khám với Bác sĩ này
+          </a>
+        </div>
+      </div>
+
+      <div class="profile-details-grid">
+        <div>
+          <div class="info-box">
+            <h3>📖 Giới thiệu chuyên môn</h3>
+            <p style="line-height: 1.7; color: var(--text-dark);">
+              ${d.description || 'Bác sĩ có nhiều năm kinh nghiệm công tác và điều trị tại các bệnh viện lớn, luôn lắng nghe, giải thích cặn kẽ và đồng hành cùng bệnh nhân trong suốt quá trình thăm khám.'}
+            </p>
+          </div>
+
+          <div class="info-box">
+            <h3>🎓 Quá trình đào tạo & Chuyên môn</h3>
+            <ul style="line-height: 1.8; padding-left: 20px; color: var(--text-dark);">
+              <li>Tốt nghiệp Bác sĩ Y khoa chính quy tại Đại học Y Dược</li>
+              <li>Chứng chỉ hành nghề khám chữa bệnh Chuyên khoa ${d.specialty_name || 'Nội khoa'}</li>
+              <li>Thường xuyên tham gia các hội nghị khoa học y khoa chuyên sâu định kỳ</li>
+            </ul>
+          </div>
+        </div>
+
+        <div>
+          <div class="info-box">
+            <h3>⏰ Lịch khám & Địa điểm</h3>
+            <p style="font-size: 14px; margin-bottom: 8px;"><strong>Phòng khám Đa khoa MedBooking</strong></p>
+            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+              Tầng 2, Khu khám bệnh Chuyên khoa.<br>
+              Làm việc từ <strong>Thứ 2 đến Thứ 7</strong><br>
+              Sáng: 08:00 – 12:00 | Chiều: 13:30 – 17:00
+            </p>
+            <div style="margin-top: 16px;">
+              <a href="booking.html?doctor_id=${d.id}" class="btn btn-primary" style="width: 100%;">
+                Đặt lịch khám ngay
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  document.addEventListener('DOMContentLoaded', loadDoctorDetail);
+</script>
+</body>
+</html>

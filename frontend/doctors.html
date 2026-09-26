@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đội ngũ Bác sĩ — MedBooking</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/responsive.css">
+<style>
+  .search-filter-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin-bottom: 28px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .search-input-wrap {
+    flex: 2;
+    min-width: 250px;
+    position: relative;
+  }
+  .filter-select-wrap {
+    flex: 1;
+    min-width: 200px;
+  }
+  .doctor-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="index.html" class="brand">
+      <span class="brand-icon">M</span>
+      MedBooking
+      <span class="tag">Phòng khám đa khoa</span>
+    </a>
+    <nav class="main-nav"></nav>
+  </div>
+</header>
+
+<main>
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>Đội ngũ Bác sĩ Chuyên khoa</h2>
+          <p>Tìm kiếm và lựa chọn bác sĩ uy tín phù hợp nhất với nhu cầu thăm khám của bạn</p>
+        </div>
+      </div>
+
+      <!-- THANH TÌM KIẾM & BỘ LỌC (Doctor Search Filter ⭐⭐) -->
+      <div class="search-filter-card">
+        <div class="search-input-wrap">
+          <input type="text" id="searchInput" placeholder="🔍 Tìm kiếm bác sĩ theo tên hoặc từ khóa chuyên môn..." style="width: 100%;">
+        </div>
+        <div class="filter-select-wrap">
+          <select id="specialtyFilter" style="width: 100%;">
+            <option value="">— Tất cả chuyên khoa —</option>
+          </select>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="resetFilters()">Đặt lại</button>
+      </div>
+
+      <!-- KẾT QUẢ TÌM KIẾM -->
+      <div style="margin-bottom: 16px; font-size: 14px; color: var(--text-muted);" id="resultCountText">
+        Đang tải danh sách bác sĩ...
+      </div>
+
+      <div class="doctor-card-grid" id="doctorList"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-bottom">
+      <span>© 2026 MedBooking. Tất cả quyền được bảo lưu.</span>
+      <span>Hotline Cấp cứu: <strong>0336 578 262</strong></span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/auth.js"></script>
+<script>
+  let allDoctors = [];
+
+  // Tải danh mục chuyên khoa vào dropdown
+  async function loadSpecialties() {
+    const res = await apiCall('/specialties');
+    const select = document.getElementById('specialtyFilter');
+    if (res.success && res.specialties) {
+      res.specialties.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.name;
+        opt.textContent = s.name;
+        select.appendChild(opt);
+      });
+    }
+
+    // Nếu trên URL có query param ?specialty=...
+    const urlParams = new URLSearchParams(window.location.search);
+    const specParam = urlParams.get('specialty');
+    if (specParam) {
+      select.value = specParam;
+    }
+  }
+
+  // Tải danh sách bác sĩ
+  async function loadDoctors() {
+    const res = await apiCall('/doctors');
+    if (res.success && res.doctors) {
+      allDoctors = res.doctors;
+      applyFilters();
+    } else {
+      document.getElementById('resultCountText').textContent = 'Không thể tải danh sách bác sĩ.';
+    }
+  }
+
+  // Lọc và render danh sách bác sĩ
+  function applyFilters() {
+    const keyword = document.getElementById('searchInput').value.trim().toLowerCase();
+    const selectedSpec = document.getElementById('specialtyFilter').value;
+
+    const filtered = allDoctors.filter(d => {
+      const matchKeyword = !keyword || 
+        (d.name && d.name.toLowerCase().includes(keyword)) ||
+        (d.description && d.description.toLowerCase().includes(keyword)) ||
+        (d.specialty_name && d.specialty_name.toLowerCase().includes(keyword));
+
+      const matchSpec = !selectedSpec || (d.specialty_name === selectedSpec);
+
+      return matchKeyword && matchSpec;
+    });
+
+    renderDoctors(filtered);
+  }
+
+  function renderDoctors(doctors) {
+    const container = document.getElementById('doctorList');
+    const countText = document.getElementById('resultCountText');
+    countText.textContent = `Tìm thấy ${doctors.length} bác sĩ phù hợp:`;
+
+    if (doctors.length === 0) {
+      container.innerHTML = `
+        <div style="grid-column: 1/-1; text-align: center; padding: 40px; background: #fff; border-radius: var(--radius); border: 1px solid var(--border);">
+          <p style="color: var(--text-muted); font-size: 15px;">Không tìm thấy bác sĩ nào khớp với từ khóa tìm kiếm.</p>
+          <button class="btn btn-outline btn-sm" onclick="resetFilters()" style="margin-top: 10px;">Xóa bộ lọc</button>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = doctors.map(d => `
+      <div class="stub">
+        <div class="stub-top">
+          <div class="stub-avatar" style="--avatar-bg: #0D9488">
+            ${d.name ? d.name.split(' ').pop().substring(0, 2).toUpperCase() : 'BS'}
+          </div>
+          <div class="stub-info">
+            <h3><a href="doctor.html?id=${d.id}" class="doctor-link">${d.name}</a></h3>
+            <span class="badge">${d.specialty_name || 'Bác sĩ chuyên khoa'}</span>
+          </div>
+        </div>
+        <div class="stub-meta">
+          <span class="stub-rating">★ 4.9</span>
+          <span>·</span>
+          <span>${d.experience_years || 5} năm kinh nghiệm</span>
+        </div>
+        <div class="stub-bottom">
+          <span class="note">${d.description || 'Chuyên gia giàu kinh nghiệm thăm khám và điều trị chu đáo.'}</span>
+          <div class="stub-actions" style="display: flex; gap: 8px; margin-top: 12px;">
+            <a class="btn btn-outline btn-sm" style="flex:1;" href="doctor.html?id=${d.id}">Xem lý lịch</a>
+            <a class="btn btn-primary btn-sm" style="flex:1;" href="booking.html?doctor_id=${d.id}">Đặt lịch khám</a>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function resetFilters() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('specialtyFilter').value = '';
+    applyFilters();
+  }
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    await loadSpecialties();
+    await loadDoctors();
+
+    document.getElementById('searchInput').addEventListener('input', applyFilters);
+    document.getElementById('specialtyFilter').addEventListener('change', applyFilters);
+  });
+</script>
+</body>
+</html>

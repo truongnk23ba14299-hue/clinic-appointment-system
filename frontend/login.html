@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đăng nhập & Đăng ký — MedBooking</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/responsive.css">
+<style>
+  .auth-wrap {
+    max-width: 480px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .auth-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    background: #F8FAFC;
+  }
+  .auth-tab {
+    flex: 1;
+    text-align: center;
+    padding: 14px 16px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    color: var(--text-muted);
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .auth-tab.active {
+    color: var(--primary);
+    background: #fff;
+    border-bottom: 2px solid var(--primary);
+  }
+  .auth-body {
+    padding: 28px;
+  }
+  .auth-alert {
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+    font-size: 13px;
+    display: none;
+  }
+  .auth-alert.error {
+    background: #FEE2E2;
+    color: #991B1B;
+    border: 1px solid #F87171;
+    display: block;
+  }
+  .auth-alert.success {
+    background: #DCFCE7;
+    color: #166534;
+    border: 1px solid #4ADE80;
+    display: block;
+  }
+  .demo-accounts {
+    margin-top: 20px;
+    padding: 14px;
+    background: #F1F5F9;
+    border-radius: var(--radius);
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--text-dark);
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="index.html" class="brand">
+      <span class="brand-icon">M</span>
+      MedBooking
+      <span class="tag">Phòng khám đa khoa</span>
+    </a>
+    <nav class="main-nav"></nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="auth-wrap">
+      <div class="auth-tabs">
+        <div class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Đăng nhập</div>
+        <div class="auth-tab" id="tabRegister" onclick="switchTab('register')">Đăng ký Bệnh nhân</div>
+      </div>
+
+      <div class="auth-body">
+        <div id="authAlert" class="auth-alert"></div>
+
+        <!-- FORM ĐĂNG NHẬP -->
+        <form id="formLogin" onsubmit="handleLogin(event)">
+          <div class="field">
+            <label for="loginEmail">Email đăng nhập *</label>
+            <input type="email" id="loginEmail" required placeholder="vidu: patient.hung@gmail.com">
+          </div>
+          <div class="field">
+            <label for="loginPassword">Mật khẩu *</label>
+            <input type="password" id="loginPassword" required placeholder="Nhập mật khẩu">
+          </div>
+          <button type="submit" id="btnLoginSubmit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
+            Đăng nhập hệ thống
+          </button>
+        </form>
+
+        <!-- FORM ĐĂNG KÝ -->
+        <form id="formRegister" style="display: none;" onsubmit="handleRegister(event)">
+          <div class="field">
+            <label for="regName">Họ và tên bệnh nhân *</label>
+            <input type="text" id="regName" required placeholder="Ví dụ: Nguyễn Văn An">
+          </div>
+          <div class="field">
+            <label for="regEmail">Địa chỉ Email *</label>
+            <input type="email" id="regEmail" required placeholder="vidu: nguyenvana@gmail.com">
+          </div>
+          <div class="field">
+            <label for="regPhone">Số điện thoại *</label>
+            <input type="tel" id="regPhone" required placeholder="Ví dụ: 0912345678">
+          </div>
+          <div class="field">
+            <label for="regGender">Giới tính</label>
+            <select id="regGender">
+              <option value="Nam">Nam</option>
+              <option value="Nữ">Nữ</option>
+              <option value="Khác">Khác</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="regPassword">Mật khẩu * (Tối thiểu 6 ký tự)</label>
+            <input type="password" id="regPassword" required minlength="6" placeholder="Tạo mật khẩu">
+          </div>
+          <button type="submit" id="btnRegisterSubmit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
+            Đăng ký tài khoản mới
+          </button>
+        </form>
+
+        <div class="demo-accounts">
+          <strong>💡 Tài khoản mẫu để kiểm thử nhanh (Demo):</strong><br>
+          • <strong>Admin</strong>: <code>admin@clinic.com</code> | Pass: <code>Admin@123</code><br>
+          • <strong>Bác sĩ</strong>: <code>doctor.an@clinic.com</code> | Pass: <code>Doctor@123</code><br>
+          • <strong>Bệnh nhân</strong>: <code>patient.hung@gmail.com</code> | Pass: <code>Patient@123</code>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-bottom">
+      <span>© 2026 MedBooking. Tất cả quyền được bảo lưu.</span>
+      <span>Hotline Cấp cứu: <strong>0336 578 262</strong></span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/auth.js"></script>
+<script>
+  function showAlert(msg, isError = true) {
+    const el = document.getElementById('authAlert');
+    el.textContent = msg;
+    el.className = isError ? 'auth-alert error' : 'auth-alert success';
+  }
+
+  function clearAlert() {
+    const el = document.getElementById('authAlert');
+    el.className = 'auth-alert';
+    el.style.display = 'none';
+  }
+
+  function switchTab(tab) {
+    clearAlert();
+    if (tab === 'login') {
+      document.getElementById('tabLogin').classList.add('active');
+      document.getElementById('tabRegister').classList.remove('active');
+      document.getElementById('formLogin').style.display = 'block';
+      document.getElementById('formRegister').style.display = 'none';
+    } else {
+      document.getElementById('tabRegister').classList.add('active');
+      document.getElementById('tabLogin').classList.remove('active');
+      document.getElementById('formRegister').style.display = 'block';
+      document.getElementById('formLogin').style.display = 'none';
+    }
+  }
+
+  // Xử lý đăng nhập
+  async function handleLogin(e) {
+    e.preventDefault();
+    clearAlert();
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+
+    const btn = document.getElementById('btnLoginSubmit');
+    btn.disabled = true;
+    btn.textContent = 'Đang xử lý...';
+
+    const res = await apiCall('/auth/login', 'POST', { email, password });
+    btn.disabled = false;
+    btn.textContent = 'Đăng nhập hệ thống';
+
+    if (res.success && res.token) {
+      setToken(res.token);
+      setUser(res.user);
+
+      showAlert('Đăng nhập thành công! Đang chuyển hướng...', false);
+
+      // Chuyển hướng theo vai trò (Role-based redirect)
+      setTimeout(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirect = urlParams.get('redirect');
+        if (redirect) {
+          window.location.href = redirect;
+          return;
+        }
+
+        if (res.user.role === 'ADMIN') {
+          window.location.href = 'admin.html';
+        } else if (res.user.role === 'DOCTOR') {
+          window.location.href = 'doctor_appointments.html';
+        } else {
+          window.location.href = 'appointments.html';
+        }
+      }, 500);
+    } else {
+      showAlert(res.message || 'Email hoặc mật khẩu không chính xác.');
+    }
+  }
+
+  // Xử lý đăng ký bệnh nhân
+  async function handleRegister(e) {
+    e.preventDefault();
+    clearAlert();
+    const name = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const phone = document.getElementById('regPhone').value.trim();
+    const gender = document.getElementById('regGender').value;
+    const password = document.getElementById('regPassword').value;
+
+    const btn = document.getElementById('btnRegisterSubmit');
+    btn.disabled = true;
+    btn.textContent = 'Đang tạo tài khoản...';
+
+    const res = await apiCall('/auth/register', 'POST', {
+      name, email, phone, gender, password
+    });
+    btn.disabled = false;
+    btn.textContent = 'Đăng ký tài khoản mới';
+
+    if (res.success && res.token) {
+      setToken(res.token);
+      setUser(res.user);
+      showAlert('Đăng ký thành công! Đang chuyển hướng...', false);
+      setTimeout(() => {
+        window.location.href = 'booking.html';
+      }, 600);
+    } else {
+      showAlert(res.message || 'Lỗi khi đăng ký tài khoản.');
+    }
+  }
+
+  // Nếu người dùng đã đăng nhập rồi -> tự động chuyển hướng
+  window.addEventListener('DOMContentLoaded', () => {
+    const user = getUser();
+    if (user && getToken()) {
+      if (user.role === 'ADMIN') window.location.href = 'admin.html';
+      else if (user.role === 'DOCTOR') window.location.href = 'doctor_appointments.html';
+      else window.location.href = 'appointments.html';
+    }
+  });
+</script>
+</body>
+</html>

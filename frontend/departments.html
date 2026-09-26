@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Các phòng ban chuyên khoa — MedBooking</title>
+<meta name="description" content="Danh sách các phòng ban chuyên khoa tại Phòng khám Đa khoa MedBooking. Chi tiết dịch vụ, đội ngũ bác sĩ và chuyên môn điều trị.">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="index.html" class="brand">
+      <span class="brand-icon">M</span>
+      MedBooking
+      <span class="tag">Phòng khám đa khoa</span>
+    </a>
+    <nav class="main-nav">
+      <a href="index.html">Trang chủ</a>
+      <a href="departments.html" class="active">Phòng ban</a>
+      <a href="doctors.html">Bác sĩ</a>
+      <a href="services.html">Dịch vụ & Bảng giá</a>
+      <a href="appointments.html">Lịch của tôi</a>
+    </nav>
+    <a href="booking.html" class="btn btn-primary">Đặt lịch ngay</a>
+  </div>
+</header>
+
+<main>
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>Các phòng ban chuyên khoa</h2>
+          <p>Chọn phòng ban để xem chi tiết thông tin dịch vụ và đội ngũ bác sĩ phụ trách</p>
+        </div>
+      </div>
+      <div class="dept-grid" id="deptGrid"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="brand-icon">M</span> MedBooking
+      </div>
+      <nav class="footer-nav">
+        <a href="index.html">Trang chủ</a>
+        <a href="departments.html">Phòng ban</a>
+        <a href="doctors.html">Bác sĩ</a>
+        <a href="services.html">Dịch vụ & Bảng giá</a>
+        <a href="appointments.html">Lịch của tôi</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 MedBooking. Tất cả quyền được bảo lưu.</span>
+      <span>Hotline Cấp cứu: <strong>0336 578 262</strong></span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script>
+  const DEPT_COLORS = ["#0D9488", "#2563EB", "#64748B", "#0F766E", "#0284C7", "#4F46E5"];
+  const grid = document.getElementById("deptGrid");
+
+  SPECIALTIES.forEach((s, i) => {
+    const count = DOCTORS.filter(d => d.specialty === s).length;
+    const info = DEPT_INFO[s];
+    const a = document.createElement("a");
+    a.className = "dept-card";
+    a.href = `department.html?specialty=${encodeURIComponent(s)}`;
+    a.style.setProperty("--dept-color", DEPT_COLORS[i % DEPT_COLORS.length]);
+    a.style.setProperty("--dept-bg-image", `url('${DEPT_IMAGES[i % DEPT_IMAGES.length]}')`);
+    a.innerHTML = `
+      <span class="icon-mono">${count} BÁC SĨ</span>
+      <h3>${s}</h3>
+      <p>${info ? info.subtitle : 'Chăm sóc chuyên sâu'}</p>
+    `;
+    grid.appendChild(a);
+  });
+</script>
+<script src="js/auth.js"></script>
+</body>
+</html>
